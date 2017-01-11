@@ -1,4 +1,6 @@
 package net;
 
-public class Controller {
+import javafx.scene.layout.FlowPane;
+
+public class Controller extends FlowPane{
 }
