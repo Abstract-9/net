@@ -3,7 +3,6 @@ package sniffer;
 import com.sun.istack.internal.Nullable;
 import org.pcap4j.core.*;
 import org.pcap4j.core.PcapNetworkInterface.PromiscuousMode;
-import org.pcap4j.packet.*;
 import org.pcap4j.packet.Packet;
 
 import org.slf4j.Logger;
@@ -13,14 +12,14 @@ import org.slf4j.LoggerFactory;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-public class rawSniffer {
+public class Sniffer {
 
     private static InetAddress local;
     private static PcapHandle handle;
-    private static Logger logger = LoggerFactory.getLogger(rawSniffer.class);
+    private static Logger logger = LoggerFactory.getLogger(Sniffer.class);
     static Packet currentPacket;
 
-    public rawSniffer(boolean init){
+    public Sniffer(boolean init){
         if(init) init();
     }
 

@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 import org.pcap4j.core.PcapNetworkInterface;
 import sniffer.netAdapter;
 
+import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,27 +20,28 @@ import java.util.Collections;
 public class netApp extends Application {
 
     ArrayList<PcapNetworkInterface> nifList = new ArrayList<>();
+    Parent root;
+    ObservableList<Node> nodes;
+    netAdapter adapter = new netAdapter();
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("net.fxml"));
+        root = FXMLLoader.load(getClass().getResource("net.fxml"));
 
         primaryStage.setTitle("Net");
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
 
-        ObservableList<Node> list = root.getChildrenUnmodifiable();
+        nodes = root.getChildrenUnmodifiable();
         ListView nifList = null;
-        for(Node n : list){
+        for(Node n : nodes){
             if(n.getId()!=null && n.getId().equals("intList")){
                 nifList = (ListView) n;
                 break;
             }
         }
         ObservableList<String> nifs = FXCollections.observableArrayList();
-        for(NetworkInterface nif : Collections.list(NetworkInterface.getNetworkInterfaces())){
-            nifs.add(nif.getDisplayName());
-        }
+        nifs.addAll(adapter.getInterfaceDisplayNames());
         nifList.setItems(nifs);
     }
 
