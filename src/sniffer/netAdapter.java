@@ -14,7 +14,6 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 public class netAdapter {
 
@@ -38,13 +37,17 @@ public class netAdapter {
         for(PcapNetworkInterface pnif : pnifs){
             if(!pnif.isLoopBack()) {
                 for (NetworkInterface nif : nifs) {
+                    boolean matched = false;
                     for (InetAddress addr : Collections.list(nif.getInetAddresses())) {
                         for (PcapAddress pcapaddr : pnif.getAddresses()) {
                             InetAddress paddr = pcapaddr.getAddress();
                             if(paddr.equals(addr)){
                                 interfaces.add(new netInterface(pnif, nif));
+                                matched=true;
+                                break;
                             }
                         }
+                        if(matched) break;
                     }
                 }
             }

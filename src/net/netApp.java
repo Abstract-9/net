@@ -1,49 +1,59 @@
 package net;
 
 import javafx.application.Application;
-import javafx.collections.FXCollections;
+
 import javafx.collections.ObservableList;
+
 import javafx.fxml.FXMLLoader;
+
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ListView;
 import javafx.stage.Stage;
-import org.pcap4j.core.PcapNetworkInterface;
-import sniffer.netAdapter;
 
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.util.ArrayList;
-import java.util.Collections;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 public class netApp extends Application {
 
-    ArrayList<PcapNetworkInterface> nifList = new ArrayList<>();
-    Parent root;
-    ObservableList<Node> nodes;
-    netAdapter adapter = new netAdapter();
+    private Parent root;
+    private Scene currentScene;
+    private ObservableList<Node> nodes;
+    private Stage primaryStage;
+    private Logger logger = LoggerFactory.getLogger(netApp.class);
+
+    @Override
+    public void init() throws Exception{
+
+        root = FXMLLoader.load(getClass().getResource("layout/net.fxml"));
+
+    }
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        root = FXMLLoader.load(getClass().getResource("net.fxml"));
+
+        currentScene = new Scene(root);
+        this.primaryStage = primaryStage;
 
         primaryStage.setTitle("Net");
-        primaryStage.setScene(new Scene(root));
+        primaryStage.setScene(currentScene);
+
+        load();
+
         primaryStage.show();
 
-        nodes = root.getChildrenUnmodifiable();
-        ListView nifList = null;
-        for(Node n : nodes){
-            if(n.getId()!=null && n.getId().equals("intList")){
-                nifList = (ListView) n;
-                break;
-            }
-        }
-        ObservableList<String> nifs = FXCollections.observableArrayList();
-        nifs.addAll(adapter.getInterfaceDisplayNames());
-        nifList.setItems(nifs);
+
     }
+
+    private void load() {
+
+
+
+    }
+
+
+
 
 
     public static void main(String[] args) {
