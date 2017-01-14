@@ -19,40 +19,26 @@ public class Sniffer {
     private static Logger logger = LoggerFactory.getLogger(Sniffer.class);
     static Packet currentPacket;
 
-    public Sniffer(boolean init){
-        if(init) init();
+    public Sniffer(PcapNetworkInterface pnif, boolean init){
+        if(init) init(pnif);
     }
 
-    public void init(){
 
-        PcapNetworkInterface nif = null;
+    public void init(PcapNetworkInterface pnif){
 
         logger.info("Initializing Sniffer");
-
-        try {
-            local = InetAddress.getLocalHost();
-            logger.info("Local Address: " + local);
-            nif = Pcaps.getDevByAddress(local);
-
-        }catch(UnknownHostException e){
-            logger.error("unable to connect localhost");
-            e.printStackTrace();
-
-        }catch(PcapNativeException e){
-            logger.error("unable to connect pcap device");
-            e.printStackTrace();
-        }
 
         logger.info("Pcap device determined");
 
         try {
-            logger.debug("nif: " + nif.getName());
-            handle = nif.openLive(65536, PromiscuousMode.PROMISCUOUS, 3600); //snaplength, mode, timeout
+            logger.debug("nif: " + pnif.getName());
+            handle = pnif.openLive(65536, PromiscuousMode.PROMISCUOUS, 3600); //snaplength, mode, timeout
 
         }catch(PcapNativeException e){
             logger.error("Failed to open Handler");
             e.printStackTrace();
         }
+
         logger.info("Handler created");
         logger.info("Sniffer Initialized");
     }

@@ -1,4 +1,4 @@
-package net;
+package app;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,6 +14,7 @@ import javafx.scene.layout.GridPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sniffer.Sniffer;
 import sniffer.netAdapter;
 
 public class Controller extends GridPane{
@@ -37,10 +38,12 @@ public class Controller extends GridPane{
 
         startButton.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("resource/start_button_small.png"))));
         toolbarStart.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("resource/start_button_xs.png"))));
+
     }
 
     @FXML
     public void startSniffer(){
-        logger.info("Sniffer Started!");
+
+
     }
 }

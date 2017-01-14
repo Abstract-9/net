@@ -1,4 +1,4 @@
-package net;
+package app;
 
 import javafx.application.Application;
 
@@ -39,17 +39,7 @@ public class netApp extends Application {
         primaryStage.setTitle("Net");
         primaryStage.setScene(currentScene);
 
-        load();
-
         primaryStage.show();
-
-
-    }
-
-    private void load() {
-
-
-
     }
 
 
