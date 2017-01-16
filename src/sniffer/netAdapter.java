@@ -75,6 +75,14 @@ public class netAdapter {
         return interfaces;
     }
 
+    @Nullable
+    public netInterface getInterfaceByDisplayName(String name){
+        for(netInterface i : interfaces){
+            if(i.getDisplayName().equals(name)) return i;
+        }
+        return null;
+    }
+
 
 
 }

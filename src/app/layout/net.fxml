@@ -20,7 +20,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<GridPane hgap="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.91" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.Controller">
+<GridPane hgap="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.72" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.Controller">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="619.0" minWidth="10.0" percentWidth="33.0" prefWidth="360.0" />
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="723.0" minWidth="10.0" prefWidth="360.0" />
@@ -59,7 +59,7 @@
             <Insets top="25.0" />
          </GridPane.margin>
       </ToolBar>
-      <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" GridPane.columnSpan="2147483647" GridPane.rowSpan="2147483647">
+      <TabPane fx:id="tabs" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" GridPane.columnSpan="2147483647" GridPane.rowSpan="2147483647">
         <tabs>
           <Tab text="Menu">
             <content>
@@ -116,8 +116,13 @@
                      <children>
                         <TableView fx:id="packetTable" prefHeight="625.0" prefWidth="1280.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                           <columns>
-                            <TableColumn prefWidth="75.0" text="C1" />
-                            <TableColumn prefWidth="75.0" text="C2" />
+                            <TableColumn prefWidth="60.0" text="No." />
+                            <TableColumn prefWidth="100.0" text="Time" />
+                              <TableColumn prefWidth="150.0" text="Source" />
+                              <TableColumn prefWidth="150.0" text="Destination" />
+                              <TableColumn prefWidth="70.0" text="Protocol" />
+                              <TableColumn prefWidth="70.0" text="Length" />
+                              <TableColumn prefWidth="680.0" text="Info" />
                           </columns>
                         </TableView>
                      </children></AnchorPane>

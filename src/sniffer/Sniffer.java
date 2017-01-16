@@ -17,14 +17,17 @@ public class Sniffer {
     private static InetAddress local;
     private static PcapHandle handle;
     private static Logger logger = LoggerFactory.getLogger(Sniffer.class);
+    private static PcapNetworkInterface pnif;
     static Packet currentPacket;
 
+
     public Sniffer(PcapNetworkInterface pnif, boolean init){
-        if(init) init(pnif);
+        this.pnif = pnif;
+        if(init) init();
     }
 
 
-    public void init(PcapNetworkInterface pnif){
+    public void init(){
 
         logger.info("Initializing Sniffer");
 
