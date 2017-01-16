@@ -42,6 +42,11 @@ public class netApp extends Application {
         primaryStage.show();
     }
 
+    public Stage getPrimaryStage(){
+        logger.debug("Primary Stage: " + primaryStage.getTitle());
+        return primaryStage;
+    }
+
 
 
 
