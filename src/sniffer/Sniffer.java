@@ -19,6 +19,8 @@ public class Sniffer {
     private static Logger logger = LoggerFactory.getLogger(Sniffer.class);
     private static PcapNetworkInterface pnif;
     static Packet currentPacket;
+    private static long startTime;
+    private static boolean initialized;
 
 
     public Sniffer(PcapNetworkInterface pnif, boolean init){
@@ -28,6 +30,7 @@ public class Sniffer {
 
 
     public void init(){
+        startTime = System.currentTimeMillis();
 
         logger.info("Initializing Sniffer");
 
@@ -36,18 +39,17 @@ public class Sniffer {
         try {
             logger.debug("nif: " + pnif.getName());
             handle = pnif.openLive(65536, PromiscuousMode.PROMISCUOUS, 3600); //snaplength, mode, timeout
-
         }catch(PcapNativeException e){
             logger.error("Failed to open Handler");
             e.printStackTrace();
         }
 
         logger.info("Handler created");
-        logger.info("Sniffer Initialized");
+        logger.info("Sniffer Initialized on " + pnif.getAddresses().get(1));
     }
 
     @Nullable
-    public Packet sniff(Class packetType){
+    public Packet nextPacket(Class packetType){
         try {
             currentPacket = handle.getNextPacket();
         }catch(NotOpenException e){
@@ -60,12 +62,12 @@ public class Sniffer {
         if(currentPacket.get(packetType)!=null){
             return currentPacket.get(packetType);
         }else{
-            return sniff(packetType);
+            return nextPacket(packetType);
         }
     }
 
     @Nullable
-    public Packet sniff(){
+    public Packet nextPacket(){
         try {
             currentPacket = handle.getNextPacket();
         }catch(NotOpenException e){
@@ -74,6 +76,23 @@ public class Sniffer {
         }
         return currentPacket;
 
+    }
+
+    public PcapHandle getHandle(){
+        return handle;
+    }
+
+    public long getStartTime(){
+        return startTime;
+    }
+
+    public void close(){
+        handle.close();
+        logger.info("Sniffer Closed");
+    }
+
+    public boolean isInitialized(){
+        return initialized;
     }
 
 }

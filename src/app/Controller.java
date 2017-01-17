@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -19,6 +20,7 @@ import sniffer.Sniffer;
 import sniffer.netAdapter;
 import sniffer.netInterface;
 
+
 public class Controller extends GridPane{
 
     private Logger logger = LoggerFactory.getLogger(Controller.class);
@@ -30,6 +32,7 @@ public class Controller extends GridPane{
 
     private netAdapter adapter = new netAdapter();
     private static boolean sniffing = false;
+    private PacketCellFactory factory;
 
     public void initialize(){
 
@@ -44,16 +47,24 @@ public class Controller extends GridPane{
 
     @FXML
     public void startSniffer(){
+
         ObservableList<String> selectedSniffers =
                 intList.getSelectionModel().getSelectedItems();
-        if(selectedSniffers.size()>1){
-            Dialog<Void> dialog = new Dialog<>();
-            dialog.setContentText("Please select only 1 network interface");
-            dialog.show();
+
+        if(selectedSniffers.size()!=1){
+
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Error");
+            alert.setHeaderText("Invalid Network Interface Configuration");
+            alert.setContentText("Please select one and only one Network Interface for capture");
+            alert.showAndWait();
+
         }else{
+
             String interfaceName = selectedSniffers.get(0);
             netInterface nif = adapter.getInterfaceByDisplayName(interfaceName);
             Sniffer sniffer = null;
+
             try {
                 sniffer = new Sniffer(Pcaps.getDevByAddress(nif.getAddresses().get(0)), false);
             }catch (PcapNativeException e){
@@ -63,10 +74,24 @@ public class Controller extends GridPane{
                 dialog.setContentText("Unable to capture from this interface. Please select another.");
                 dialog.show();
             }
-            PacketCellFactory.start();
+
+            if(sniffer!=null) {
+                sniffing = true;
+                tabs.getSelectionModel().select(1);
+                factory = new PacketCellFactory(sniffer, packetTable);
+                factory.start();
+            }
+
         }
 
 
+    }
+
+    @FXML
+    public void stopSniffer(){
+        if(sniffing){
+            factory.stop();
+        }
     }
 
     static boolean isSniffing(){
