@@ -3,7 +3,6 @@ package app;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
@@ -18,15 +17,18 @@ import sniffer.Sniffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+
 public class PacketCellFactory{
 
     private static Sniffer sniffer;
     private static TableView packetTable;
+    private ArrayList<Packet> packets = new ArrayList<>();
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private ObservableList<PacketCell> packetCells = FXCollections.observableArrayList();
     private int counter = 1;
     private CaptureLoop captureLoop;
-    private Alert bindingAlert = new Alert(Alert.AlertType.INFORMATION);
+
 
     PacketCellFactory(Sniffer sniffer, TableView packetTable){
         this.sniffer = sniffer;
@@ -36,15 +38,14 @@ public class PacketCellFactory{
     public void start(){
         sniffer.init();
         formatTable();
-        CaptureLoop loop = new CaptureLoop(sniffer, this);
-        loop.start();
-        bindingAlert();
+        captureLoop = new CaptureLoop(sniffer, this);
+        captureLoop.start();
     }
 
     public void createCell(Packet packet){
         String src = "", dest = "";
         if(packet!=null) {
-
+            packets.add(packet);
             while (packet.getPayload() != null) {
                 if (packet.getClass().equals(IpV4Packet.class)) {
                     src = ((IpV4Packet.IpV4Header) packet.getHeader()).getSrcAddr().toString();
@@ -57,14 +58,16 @@ public class PacketCellFactory{
             try{
                 packetCells.add(new PacketCell(
                         counter++,
-                        sniffer.getHandle().getTimestamp().getTime() - sniffer.getStartTime(),
+                        (sniffer.getHandle().getTimestamp().getTime() - sniffer.getStartTime())/100,
                         src,
                         dest,
                         packet.getClass().getName().substring(18).replace("Packet", ""),
                         packet.getRawData().length,
                         buildInfo(packet)
                 ));
-            }catch (NullPointerException e){}
+            }catch (NullPointerException e){
+                packets.remove(packets.size()-1);
+            }
 
         }
     }
@@ -92,11 +95,5 @@ public class PacketCellFactory{
 
         return packet.getClass().getName().substring(18).replace("Packet", "");
 
-    }
-    private void bindingAlert(){
-        bindingAlert.setTitle("Binding");
-        bindingAlert.setHeaderText("Please Wait");
-        bindingAlert.setContentText("Network Interface Binding In Progress");
-        bindingAlert.show();
     }
 }

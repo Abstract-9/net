@@ -1,5 +1,7 @@
 package app;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -25,7 +27,7 @@ public class Controller extends GridPane{
 
     private Logger logger = LoggerFactory.getLogger(Controller.class);
 
-    @FXML private Button toolbarStart, startButton;
+    @FXML private Button toolbarStart, startButton, toolbarStop;
     @FXML private ListView intList;
     @FXML private TableView packetTable;
     @FXML private TabPane tabs;
@@ -42,6 +44,13 @@ public class Controller extends GridPane{
 
         startButton.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("resource/start_button_small.png"))));
         toolbarStart.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("resource/start_button_xs.png"))));
+        toolbarStop.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("resource/stop_button_xs.png"))));
+
+        packetTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+
+        });
+
+
 
     }
 
@@ -70,9 +79,10 @@ public class Controller extends GridPane{
             }catch (PcapNativeException e){
                 logger.error("Invalid interface used");
                 logger.debug(e.getMessage());
-                Dialog<Void> dialog = new Dialog<>();
-                dialog.setContentText("Unable to capture from this interface. Please select another.");
-                dialog.show();
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Error");
+                alert.setHeaderText("Invalid Network Interface");
+                alert.setContentText("Please select another network interface.");
             }
 
             if(sniffer!=null) {
@@ -80,6 +90,7 @@ public class Controller extends GridPane{
                 tabs.getSelectionModel().select(1);
                 factory = new PacketCellFactory(sniffer, packetTable);
                 factory.start();
+                toolbarStop.setDisable(false);
             }
 
         }
@@ -92,6 +103,7 @@ public class Controller extends GridPane{
         if(sniffing){
             factory.stop();
         }
+        toolbarStop.setDisable(true);
     }
 
     static boolean isSniffing(){
