@@ -11,3 +11,20 @@
 .button:pressed{
     -fx-background-color: #ffc43a;
 }
+#raw, #packetTable {
+    -fx-font-family: monospace bold;
+}
+.tab {
+    -fx-background-color: #ffe098;
+    -fx-border-color: #ffc43a;
+}
+.tab:selected{
+    -fx-background-color: #ffc43a;
+}
+.tab-pane .tab-header-area .tab-header-background{
+    -fx-background-color: transparent;
+    -fx-max-height: 20px;
+}
+.properties{
+    -fx-font-family: monospace;
+}

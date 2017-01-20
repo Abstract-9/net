@@ -21,18 +21,21 @@ import sniffer.netAdapter;
 import sniffer.netInterface;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 
 public class Controller extends GridPane{
 
     private Logger logger = LoggerFactory.getLogger(Controller.class);
 
-    @FXML private Button toolbarStart, startButton;
+    @FXML private Button toolbarStart, startButton, toolbarStop;
     @FXML private ListView<String> intList;
     @FXML private TableView<PacketCell> packetTable;
     @FXML private TabPane tabs;
-    @FXML private ListView<String> propertiesTableGeneral;
+    @FXML private ListView<String> propertiesTableGeneral, propertiesTable1, propertiesTable2, propertiesTable3;
     @FXML private TextArea raw;
+    @FXML private Label propertiesLabel1, propertiesLabel2, propertiesLabel3;
 
     private netAdapter adapter = new netAdapter();
     private static boolean sniffing = false;
@@ -47,11 +50,12 @@ public class Controller extends GridPane{
 
         startButton.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("resource/start_button_small.png"))));
         toolbarStart.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("resource/start_button_xs.png"))));
+        toolbarStop.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("resource/stop_button_xs.png"))));
 
         initPropertiesLayout();
 
         packetTable.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
-            layout.generateLayout(factory.getPacket(packetTable.getSelectionModel().getFocusedIndex()), newValue);
+            layout.generateLayout(factory.getPacket(packetTable.getSelectionModel().getSelectedIndex()), newValue);
         }));
     }
 
@@ -90,6 +94,8 @@ public class Controller extends GridPane{
                 tabs.getSelectionModel().select(1);
                 factory = new PacketCellFactory(sniffer, packetTable);
                 factory.start();
+                toolbarStart.setDisable(true);
+                toolbarStop.setDisable(false);
             }
 
         }
@@ -102,6 +108,9 @@ public class Controller extends GridPane{
         if(sniffing){
             factory.stop();
         }
+        sniffing=false;
+        toolbarStart.setDisable(false);
+        toolbarStop.setDisable(true);
     }
 
     static boolean isSniffing(){
@@ -109,9 +118,9 @@ public class Controller extends GridPane{
     }
 
     private void initPropertiesLayout(){
-        ArrayList<ListView<String>> lists = new ArrayList<>();
-        ArrayList<Label> labels = new ArrayList<>();
-        lists.add(propertiesTableGeneral);
+        ArrayList<ListView<String>> lists = new ArrayList<>(
+                Arrays.asList(propertiesTableGeneral, propertiesTable1, propertiesTable2, propertiesTable3));
+        ArrayList<Label> labels = new ArrayList<>(Arrays.asList(propertiesLabel1, propertiesLabel2, propertiesLabel3));
         layout = new packetPropertiesLayout(lists, labels, raw);
     }
 }

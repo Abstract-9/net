@@ -61,7 +61,7 @@ public class PacketCellFactory{
                         src,
                         dest,
                         packet.getClass().getName().substring(18).replace("Packet", ""),
-                        packet.getRawData().length,
+                        packets.get(packets.size()-1).getRawData().length,
                         buildInfo(packet)
                 ));
             }catch (NullPointerException e){

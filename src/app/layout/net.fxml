@@ -21,7 +21,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<GridPane hgap="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.Controller">
+<GridPane hgap="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" stylesheets="@fxml.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.Controller">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="619.0" minWidth="10.0" percentWidth="33.0" prefWidth="360.0" />
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="723.0" minWidth="10.0" prefWidth="360.0" />
@@ -55,7 +55,7 @@
       <ToolBar prefHeight="30.0" prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.halignment="LEFT" GridPane.valignment="TOP">
         <items>
           <Button fx:id="toolbarStart" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#startSniffer" />
-            <Button fx:id="toolbarStop" mnemonicParsing="false" onAction="#stopSniffer" text="Stop" />
+            <Button fx:id="toolbarStop" contentDisplay="GRAPHIC_ONLY" disable="true" mnemonicParsing="false" onAction="#stopSniffer" />
         </items>
          <GridPane.margin>
             <Insets top="25.0" />
@@ -134,7 +134,7 @@
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <GridPane hgap="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                           <columnConstraints>
                             <ColumnConstraints hgrow="SOMETIMES" maxWidth="633.0" minWidth="10.0" prefWidth="300.0" />
                             <ColumnConstraints hgrow="SOMETIMES" maxWidth="1073.0" minWidth="10.0" prefWidth="300.0" />
@@ -154,7 +154,7 @@
                                     <Insets left="5.0" top="5.0" />
                                  </GridPane.margin>
                               </Label>
-                              <ListView fx:id="propertiesTableGeneral" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
+                              <ListView fx:id="propertiesTableGeneral" prefHeight="200.0" prefWidth="200.0" styleClass="properties" GridPane.rowIndex="1">
                                  <padding>
                                     <Insets left="5.0" />
                                  </padding>
@@ -169,9 +169,27 @@
                               </Label>
                               <TextArea fx:id="raw" editable="false" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2">
                                  <GridPane.margin>
-                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                    <Insets bottom="5.0" right="5.0" top="5.0" />
                                  </GridPane.margin>
                               </TextArea>
+                              <ListView fx:id="propertiesTable1" prefHeight="200.0" prefWidth="200.0" styleClass="properties" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                 <GridPane.margin>
+                                    <Insets />
+                                 </GridPane.margin>
+                              </ListView>
+                              <Label fx:id="propertiesLabel1" text="Protocol1" GridPane.columnIndex="1" GridPane.valignment="BOTTOM" />
+                              <ListView fx:id="propertiesTable2" prefHeight="200.0" prefWidth="200.0" styleClass="properties" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                              <ListView fx:id="propertiesTable3" prefHeight="200.0" prefWidth="200.0" styleClass="properties" GridPane.rowIndex="2">
+                                 <GridPane.margin>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="40.0" />
+                                 </GridPane.margin>
+                              </ListView>
+                              <Label fx:id="propertiesLabel2" text="Protocol2" GridPane.columnIndex="2" GridPane.valignment="BOTTOM" />
+                              <Label fx:id="propertiesLabel3" text="Protocol3" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                                 <padding>
+                                    <Insets left="5.0" top="25.0" />
+                                 </padding>
+                              </Label>
                            </children>
                         </GridPane>
                      </children></AnchorPane>
