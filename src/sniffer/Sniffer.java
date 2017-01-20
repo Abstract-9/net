@@ -95,4 +95,8 @@ public class Sniffer {
         return initialized;
     }
 
+    public PcapNetworkInterface getPnif(){
+        return pnif;
+    }
+
 }

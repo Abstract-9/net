@@ -23,12 +23,11 @@ public class PacketCellFactory{
 
     private static Sniffer sniffer;
     private static TableView packetTable;
-    private ArrayList<Packet> packets = new ArrayList<>();
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private ObservableList<PacketCell> packetCells = FXCollections.observableArrayList();
     private int counter = 1;
     private CaptureLoop captureLoop;
-
+    private ArrayList<Packet> packets = new ArrayList<>();
 
     PacketCellFactory(Sniffer sniffer, TableView packetTable){
         this.sniffer = sniffer;
@@ -58,7 +57,7 @@ public class PacketCellFactory{
             try{
                 packetCells.add(new PacketCell(
                         counter++,
-                        (sniffer.getHandle().getTimestamp().getTime() - sniffer.getStartTime())/100,
+                        sniffer.getHandle().getTimestamp().getTime() - sniffer.getStartTime(),
                         src,
                         dest,
                         packet.getClass().getName().substring(18).replace("Packet", ""),
@@ -95,5 +94,13 @@ public class PacketCellFactory{
 
         return packet.getClass().getName().substring(18).replace("Packet", "");
 
+    }
+
+    Packet getPacket(int index){
+        return packets.get(index);
+    }
+
+    static Sniffer getSniffer(){
+        return sniffer;
     }
 }

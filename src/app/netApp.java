@@ -20,6 +20,7 @@ public class netApp extends Application {
 
     private Parent root;
     private Scene currentScene;
+    private ObservableList<Node> nodes;
     private Stage primaryStage;
     private Logger logger = LoggerFactory.getLogger(netApp.class);
 
@@ -49,13 +50,11 @@ public class netApp extends Application {
 
     @Override
     public void stop() throws Exception {
-        if(Controller.isSniffing())((Button)currentScene.lookup("#toolbarStop")).fire();
+        if(Controller.isSniffing()) ((Button)currentScene.lookup("#toolbarStop")).fire();
         super.stop();
     }
 
     public static void main(String[] args) {
         launch(args);
     }
-
-
 }

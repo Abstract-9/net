@@ -1,7 +1,5 @@
 package app;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -22,19 +20,24 @@ import sniffer.Sniffer;
 import sniffer.netAdapter;
 import sniffer.netInterface;
 
+import java.util.ArrayList;
+
 
 public class Controller extends GridPane{
 
     private Logger logger = LoggerFactory.getLogger(Controller.class);
 
-    @FXML private Button toolbarStart, startButton, toolbarStop;
-    @FXML private ListView intList;
-    @FXML private TableView packetTable;
+    @FXML private Button toolbarStart, startButton;
+    @FXML private ListView<String> intList;
+    @FXML private TableView<PacketCell> packetTable;
     @FXML private TabPane tabs;
+    @FXML private ListView<String> propertiesTableGeneral;
+    @FXML private TextArea raw;
 
     private netAdapter adapter = new netAdapter();
     private static boolean sniffing = false;
-    private PacketCellFactory factory;
+    private static PacketCellFactory factory;
+    private packetPropertiesLayout layout;
 
     public void initialize(){
 
@@ -44,14 +47,12 @@ public class Controller extends GridPane{
 
         startButton.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("resource/start_button_small.png"))));
         toolbarStart.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("resource/start_button_xs.png"))));
-        toolbarStop.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("resource/stop_button_xs.png"))));
 
-        packetTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+        initPropertiesLayout();
 
-        });
-
-
-
+        packetTable.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
+            layout.generateLayout(factory.getPacket(packetTable.getSelectionModel().getFocusedIndex()), newValue);
+        }));
     }
 
     @FXML
@@ -79,10 +80,9 @@ public class Controller extends GridPane{
             }catch (PcapNativeException e){
                 logger.error("Invalid interface used");
                 logger.debug(e.getMessage());
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Error");
-                alert.setHeaderText("Invalid Network Interface");
-                alert.setContentText("Please select another network interface.");
+                Dialog<Void> dialog = new Dialog<>();
+                dialog.setContentText("Unable to capture from this interface. Please select another.");
+                dialog.show();
             }
 
             if(sniffer!=null) {
@@ -90,7 +90,6 @@ public class Controller extends GridPane{
                 tabs.getSelectionModel().select(1);
                 factory = new PacketCellFactory(sniffer, packetTable);
                 factory.start();
-                toolbarStop.setDisable(false);
             }
 
         }
@@ -99,14 +98,20 @@ public class Controller extends GridPane{
     }
 
     @FXML
-    public void stopSniffer(){
+    void stopSniffer(){
         if(sniffing){
             factory.stop();
         }
-        toolbarStop.setDisable(true);
     }
 
     static boolean isSniffing(){
         return sniffing;
+    }
+
+    private void initPropertiesLayout(){
+        ArrayList<ListView<String>> lists = new ArrayList<>();
+        ArrayList<Label> labels = new ArrayList<>();
+        lists.add(propertiesTableGeneral);
+        layout = new packetPropertiesLayout(lists, labels, raw);
     }
 }
