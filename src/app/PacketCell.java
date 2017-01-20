@@ -4,12 +4,16 @@ package app;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import org.pcap4j.packet.Packet;
 
-public class PacketCell {
+import java.util.Date;
+
+public class PacketCell{
 
     private final SimpleStringProperty proto, src, dest, info;
     private final SimpleIntegerProperty num, length;
     private final SimpleDoubleProperty time;
+    private long capTime;
 
     PacketCell(int num, double time, String src, String dest, String proto, int length, String info){
         this.num = new SimpleIntegerProperty(num);
@@ -19,6 +23,7 @@ public class PacketCell {
         this.proto = new SimpleStringProperty(proto);
         this.length = new SimpleIntegerProperty(length);
         this.info = new SimpleStringProperty(info);
+        this.capTime = System.currentTimeMillis();
     }
 
     public String getProto() {
@@ -75,5 +80,9 @@ public class PacketCell {
 
     public void setTime(double time) {
         this.time.set(time);
+    }
+
+    Date getCapTime(){
+        return new Date(capTime);
     }
 }

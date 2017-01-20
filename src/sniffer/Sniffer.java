@@ -14,13 +14,12 @@ import java.net.UnknownHostException;
 
 public class Sniffer {
 
-    private static InetAddress local;
     private static PcapHandle handle;
     private static Logger logger = LoggerFactory.getLogger(Sniffer.class);
     private static PcapNetworkInterface pnif;
-    static Packet currentPacket;
+    private static Packet currentPacket;
     private static long startTime;
-    private static boolean initialized;
+    private static boolean initialized = false;
 
 
     public Sniffer(PcapNetworkInterface pnif, boolean init){
@@ -46,6 +45,7 @@ public class Sniffer {
 
         logger.info("Handler created");
         logger.info("Sniffer Initialized on " + pnif.getAddresses().get(1));
+        initialized = true;
     }
 
     @Nullable
@@ -91,8 +91,12 @@ public class Sniffer {
         logger.info("Sniffer Closed");
     }
 
-    public boolean isInitialized(){
+    boolean isInitialized(){
         return initialized;
+    }
+
+    public PcapNetworkInterface getPnif(){
+        return pnif;
     }
 
 }
