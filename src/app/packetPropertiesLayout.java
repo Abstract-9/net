@@ -42,6 +42,7 @@ class packetPropertiesLayout {
         generalProperties();
         firstProtocolProperties(currentPacket.getPayload());
         secondProtocolProperties(currentPacket.getPayload().getPayload());
+        thirdProtocolProperties(currentPacket.getPayload().getPayload().getPayload());
         generateRaw();
     }
 
@@ -97,7 +98,28 @@ class packetPropertiesLayout {
 
     private void secondProtocolProperties(Packet packet){
         ObservableList<String> values = FXCollections.observableArrayList();
+        switch(packetTopology.get(2)){
+            case "Tcp":
+                TcpPacket.TcpHeader tcpHeader = packet.get(TcpPacket.class).getHeader();
+                labels.get(1).setText("Transmission Control Protocol");
+                values.add("Source Port: " + tcpHeader.getSrcPort());
+                values.add("Destination Port: " + tcpHeader.getDstPort());
+                values.add("Header Length: " + tcpHeader.getRawData().length);
+                values.add("Acknowledgement Number: " + tcpHeader.getAcknowledgmentNumber());
+                values.add("Urgent: " + tcpHeader.getUrg());
+                values.add("Acknowledgement: " + tcpHeader.getAck());
+                values.add("Push: " + tcpHeader.getPsh());
+                values.add("Reset: " + tcpHeader.getRst());
+                values.add("SYN: " + tcpHeader.getSyn());
+                values.add("FIN: " + tcpHeader.getFin());
+                values.add("Window Size: " + tcpHeader.getWindow());
+                values.add("Header CheckSum: 0x" + ByteArrays.toHexString(tcpHeader.getChecksum(), ""));
+        }
+        lists.get(2).setItems(values);
 
+    }
+
+    private void thirdProtocolProperties(Packet packet){
 
     }
 

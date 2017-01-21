@@ -3,7 +3,9 @@ package app;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -30,8 +32,8 @@ public class PacketCellFactory{
     private ArrayList<Packet> packets = new ArrayList<>();
 
     PacketCellFactory(Sniffer sniffer, TableView packetTable){
-        this.sniffer = sniffer;
-        this.packetTable = packetTable;
+        PacketCellFactory.sniffer = sniffer;
+        PacketCellFactory.packetTable = packetTable;
     }
 
     public void start(){
@@ -78,6 +80,8 @@ public class PacketCellFactory{
         sniffer.close();
     }
 
+
+    @SuppressWarnings("unchecked")
     private void formatTable(){
         ObservableList<TableColumn> columns = packetTable.getColumns();
         columns.get(0).setCellValueFactory(new PropertyValueFactory<PacketCell, Integer>("num"));
@@ -88,6 +92,16 @@ public class PacketCellFactory{
         columns.get(5).setCellValueFactory(new PropertyValueFactory<PacketCell, Integer>("length"));
         columns.get(6).setCellValueFactory(new PropertyValueFactory<PacketCell, String>("info"));
         packetTable.setItems(packetCells);
+
+        packetTable.setRowFactory((tv) -> {
+            TableRow<PacketCell> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if(event.getClickCount()==2 && !row.isEmpty()){
+                    ((TabPane)netApp.getCurrentScene().lookup("#tabs")).getSelectionModel().select(2);
+                }
+            });
+            return row;
+        });
     }
 
     private String buildInfo(Packet packet){

@@ -22,7 +22,6 @@ import sniffer.netInterface;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 
 
 public class Controller extends GridPane{
@@ -123,4 +122,5 @@ public class Controller extends GridPane{
         ArrayList<Label> labels = new ArrayList<>(Arrays.asList(propertiesLabel1, propertiesLabel2, propertiesLabel3));
         layout = new packetPropertiesLayout(lists, labels, raw);
     }
+
 }

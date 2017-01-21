@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 public class netApp extends Application {
 
     private Parent root;
-    private Scene currentScene;
+    private static Scene currentScene;
     private ObservableList<Node> nodes;
     private Stage primaryStage;
     private Logger logger = LoggerFactory.getLogger(netApp.class);
@@ -46,6 +46,10 @@ public class netApp extends Application {
     public Stage getPrimaryStage(){
         logger.debug("Primary Stage: " + primaryStage.getTitle());
         return primaryStage;
+    }
+
+    public static Scene getCurrentScene(){
+        return currentScene;
     }
 
     @Override
