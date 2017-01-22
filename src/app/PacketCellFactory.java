@@ -9,10 +9,9 @@ import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 
 import javafx.scene.control.cell.PropertyValueFactory;
-import org.pcap4j.packet.IpV4Packet;
-import org.pcap4j.packet.Packet;
+import org.pcap4j.packet.*;
 
-import org.pcap4j.packet.UnknownPacket;
+import org.pcap4j.util.ByteArrays;
 import sniffer.CaptureLoop;
 import sniffer.Sniffer;
 
@@ -20,8 +19,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
-public class PacketCellFactory{
+public class PacketCellFactory {
 
     private static Sniffer sniffer;
     private static TableView packetTable;
@@ -31,58 +31,71 @@ public class PacketCellFactory{
     private CaptureLoop captureLoop;
     private ArrayList<Packet> packets = new ArrayList<>();
 
-    PacketCellFactory(Sniffer sniffer, TableView packetTable){
+    PacketCellFactory(Sniffer sniffer, TableView packetTable) {
         PacketCellFactory.sniffer = sniffer;
         PacketCellFactory.packetTable = packetTable;
     }
 
-    public void start(){
+    public void start() {
         sniffer.init();
         formatTable();
         captureLoop = new CaptureLoop(sniffer, this);
         captureLoop.start();
     }
 
-    public void createCell(Packet packet){
+    public void createCell(Packet packet) {
         String src = "", dest = "";
-        if(packet!=null) {
+        if (packet != null) {
+            String protocol = null;
             packets.add(packet);
-            while (packet.getPayload() != null) {
+            do{
+                packet=packet.getPayload();
                 if (packet.getClass().equals(IpV4Packet.class)) {
                     src = ((IpV4Packet.IpV4Header) packet.getHeader()).getSrcAddr().toString();
                     dest = ((IpV4Packet.IpV4Header) packet.getHeader()).getDstAddr().toString();
                 }
-                if (packet.getPayload().getClass() != UnknownPacket.class) packet = packet.getPayload();
-                else break;
+                if(packet.getClass() != UnknownPacket.class) protocol = packet.getClass().getName().substring(18).replace("Packet", "");
+                else {
+                    String tmp = packetInfoBuilder.resolveProtocol(packet);
+                    if(!tmp.equals("Unknown")) protocol=tmp;
+                    break;
+                }
+            }while(packet.getPayload()!=null);
+
+            if(src.equals("")){
+                if(packet.get(ArpPacket.class)!=null) {
+                    src = ((ArpPacket.ArpHeader) packet.getHeader()).getSrcHardwareAddr().toString();
+                    dest = ((ArpPacket.ArpHeader) packet.getHeader()).getDstHardwareAddr().toString();
+                    protocol = "ARP";
+                }
             }
 
-            try{
+            try {
                 packetCells.add(new PacketCell(
                         counter++,
-                        sniffer.getHandle().getTimestamp().getTime() - sniffer.getStartTime(),
-                        src,
-                        dest,
-                        packet.getClass().getName().substring(18).replace("Packet", ""),
-                        packets.get(packets.size()-1).getRawData().length,
-                        buildInfo(packet)
+                        ((double)sniffer.getHandle().getTimestamp().getTime() - (double)sniffer.getStartTime())/1000,
+                        src.substring(1),
+                        dest.substring(1),
+                        protocol,
+                        packets.get(packets.size() - 1).getRawData().length,
+                        packetInfoBuilder.buildInfo(packet, protocol)
                 ));
-            }catch (NullPointerException e){
-                packets.remove(packets.size()-1);
+            } catch (Exception e) {
+                packets.remove(packets.size() - 1);
             }
 
         }
     }
 
 
-
-    public void stop(){
+    public void stop() {
         captureLoop.stop();
         sniffer.close();
     }
 
 
     @SuppressWarnings("unchecked")
-    private void formatTable(){
+    private void formatTable() {
         ObservableList<TableColumn> columns = packetTable.getColumns();
         columns.get(0).setCellValueFactory(new PropertyValueFactory<PacketCell, Integer>("num"));
         columns.get(1).setCellValueFactory(new PropertyValueFactory<PacketCell, Double>("time"));
@@ -96,25 +109,34 @@ public class PacketCellFactory{
         packetTable.setRowFactory((tv) -> {
             TableRow<PacketCell> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
-                if(event.getClickCount()==2 && !row.isEmpty()){
-                    ((TabPane)netApp.getCurrentScene().lookup("#tabs")).getSelectionModel().select(2);
+                if (event.getClickCount() == 2 && !row.isEmpty()) {
+                    ((TabPane) netApp.getCurrentScene().lookup("#tabs")).getSelectionModel().select(2);
                 }
             });
             return row;
         });
     }
 
-    private String buildInfo(Packet packet){
 
-        return packet.getClass().getName().substring(18).replace("Packet", "");
 
-    }
-
-    Packet getPacket(int index){
+    Packet getPacket(int index) {
         return packets.get(index);
     }
 
-    static Sniffer getSniffer(){
+    static Sniffer getSniffer() {
         return sniffer;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

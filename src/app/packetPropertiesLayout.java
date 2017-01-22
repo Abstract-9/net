@@ -5,10 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
-import org.pcap4j.packet.EthernetPacket;
-import org.pcap4j.packet.IpV4Packet;
-import org.pcap4j.packet.Packet;
-import org.pcap4j.packet.TcpPacket;
+import org.pcap4j.packet.*;
 import org.pcap4j.util.ByteArrays;
 
 
@@ -16,6 +13,26 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 class packetPropertiesLayout {
+
+    enum protocol{
+        HTTP ("Hypertext Transfer Protocol"),
+        SSDP ("Simple Service Discovery Protocol"),
+        Tcp  ("Transmission Control Protocol"),
+        Udp  ("User Datagram Protocol"),
+        Arp  ("Address Resolution Protocol"),
+        IpV4 ("Internet Protocol Version 4"),
+        IpV6 ("Internet Protocol Version 6");
+
+        private final String longName;
+
+        protocol(String longName){
+            this.longName = longName;
+        }
+
+        String getLongName(){
+            return this.longName;
+        }
+    }
 
     private ArrayList<ListView<String>> lists;
     private ArrayList<Label> labels;
@@ -41,8 +58,12 @@ class packetPropertiesLayout {
 
         generalProperties();
         firstProtocolProperties(currentPacket.getPayload());
-        secondProtocolProperties(currentPacket.getPayload().getPayload());
-        thirdProtocolProperties(currentPacket.getPayload().getPayload().getPayload());
+        if(packetTopology.size()>2) {
+            secondProtocolProperties(currentPacket.getPayload().getPayload());
+            if(packetTopology.size()>3) {
+                thirdProtocolProperties(currentPacket.getPayload().getPayload().getPayload());
+            }
+        }
         generateRaw();
     }
 
@@ -73,7 +94,7 @@ class packetPropertiesLayout {
         ObservableList<String> values = FXCollections.observableArrayList();
         switch(packetTopology.get(1)){
             case "IpV4":
-                labels.get(0).setText("Internet Protocol Version 4");
+                labels.get(0).setText(protocol.valueOf("IpV4").getLongName());
                 IpV4Packet.IpV4Header ipV4Header = packet.get(IpV4Packet.class).getHeader();
                 values.add("Version: 0x0800");
                 values.add("Source Address:" + ipV4Header.getSrcAddr().toString().substring(1));
@@ -92,6 +113,16 @@ class packetPropertiesLayout {
                 values.add("Payload: " + packetTopology.get(2));
                 values.add("Header Checksum: 0x" + ByteArrays.toHexString(ipV4Header.getHeaderChecksum(), ""));
                 break;
+            case "Arp":
+                labels.get(0).setText(protocol.valueOf("Arp").getLongName());
+                ArpPacket.ArpHeader arpHeader = packet.get(ArpPacket.class).getHeader();
+                values.add("Protocol: " + arpHeader.getProtocolType().valueAsString());
+                values.add("Hardware Size: " + arpHeader.getHardwareAddrLengthAsInt());
+                values.add("Protocol Size: " + arpHeader.getHardwareAddrLengthAsInt());
+                values.add("Sender Hardware Address: " + arpHeader.getSrcHardwareAddr());
+                values.add("Sender IP address: " + arpHeader.getSrcProtocolAddr().toString());
+                values.add("Target Hardware Address: " + arpHeader.getDstHardwareAddr());
+                values.add("Target IP address: " + arpHeader.getDstProtocolAddr().toString());
         }
         lists.get(1).setItems(values);
     }
@@ -101,7 +132,7 @@ class packetPropertiesLayout {
         switch(packetTopology.get(2)){
             case "Tcp":
                 TcpPacket.TcpHeader tcpHeader = packet.get(TcpPacket.class).getHeader();
-                labels.get(1).setText("Transmission Control Protocol");
+                labels.get(1).setText(protocol.valueOf("Tcp").getLongName());
                 values.add("Source Port: " + tcpHeader.getSrcPort());
                 values.add("Destination Port: " + tcpHeader.getDstPort());
                 values.add("Header Length: " + tcpHeader.getRawData().length);
@@ -114,13 +145,23 @@ class packetPropertiesLayout {
                 values.add("FIN: " + tcpHeader.getFin());
                 values.add("Window Size: " + tcpHeader.getWindow());
                 values.add("Header CheckSum: 0x" + ByteArrays.toHexString(tcpHeader.getChecksum(), ""));
+                break;
+            case "Udp":
+                UdpPacket.UdpHeader udpHeader = packet.get(UdpPacket.class).getHeader();
+                labels.get(1).setText(protocol.valueOf("Udp").getLongName());
+                values.add("Source Port: " + udpHeader.getSrcPort());
+                values.add("Destination Port: " + udpHeader.getDstPort());
+                values.add("Header Length: " + udpHeader.getLength());
+                values.add("Header Checksum: 0x" + ByteArrays.toHexString(udpHeader.getChecksum(), ""));
         }
         lists.get(2).setItems(values);
 
     }
 
     private void thirdProtocolProperties(Packet packet){
-
+        if(!packetTopology.get(3).equals("Unknown")){
+            labels.get(2).setText(protocol.valueOf(packetTopology.get(3)).getLongName());
+        }
     }
 
     private void generateTopology(){
@@ -130,7 +171,9 @@ class packetPropertiesLayout {
         if(tmpPacket!=null) {
             boolean moreLayers = true;
             while(moreLayers) {
-                packetTopology.add(tmpPacket.getClass().getName().substring(18).replace("Packet", ""));
+                String layer = tmpPacket.getClass().getName().substring(18).replace("Packet", "");
+                if(layer.equals("Unknown")) packetTopology.add(packetInfoBuilder.resolveProtocol(tmpPacket));
+                else packetTopology.add(tmpPacket.getClass().getName().substring(18).replace("Packet", ""));
                 if(tmpPacket.getPayload()!=null) tmpPacket = tmpPacket.getPayload();
                 else moreLayers=false;
             }
