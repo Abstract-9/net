@@ -1,30 +1,31 @@
 package dissector;
 
+import app.packetPropertiesLayout;
 import org.pcap4j.packet.Packet;
 
 import java.util.ArrayList;
 
-abstract class AbstractDissector{
+public abstract class AbstractDissector {
 
-    private ArrayList<ValuePair> values = new ArrayList<>();
-    private Packet currentPacket;
+    ArrayList<ValuePair<String, String>> values = new ArrayList<>();
+    Packet currentPacket;
 
+    public abstract ArrayList<ValuePair<String, String>> dissect(Packet packet);
 
-    abstract ArrayList<ValuePair> dissect(Packet p);
-
-
-    ArrayList<ValuePair> getValues(){
+    ArrayList<ValuePair<String, String>> getValues() {
         return values;
     }
 
-    Packet getCurrentPacket(){
+    Packet getCurrentPacket() {
         return currentPacket;
     }
 
+    ValuePair getKey(String key){
+        for(ValuePair v : values){
+            if(v.getKey().equals(key)) return v;
+        }
+        return null;
+    }
 
-
-
-
-
-
+    abstract packetPropertiesLayout.protocol getProtocol();
 }

@@ -3,15 +3,12 @@ package app;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.util.Callback;
 import org.pcap4j.packet.*;
 
-import org.pcap4j.util.ByteArrays;
 import sniffer.CaptureLoop;
 import sniffer.Sniffer;
 
@@ -19,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class PacketCellFactory {
 
@@ -48,24 +44,25 @@ public class PacketCellFactory {
         if (packet != null) {
             String protocol = null;
             packets.add(packet);
-            do{
-                packet=packet.getPayload();
-                if (packet.getClass().equals(IpV4Packet.class)) {
-                    src = ((IpV4Packet.IpV4Header) packet.getHeader()).getSrcAddr().toString();
-                    dest = ((IpV4Packet.IpV4Header) packet.getHeader()).getDstAddr().toString();
+            Packet tmpPacket = packet;
+            while(tmpPacket.getPayload()!=null){
+                tmpPacket=tmpPacket.getPayload();
+                if (tmpPacket.getClass().equals(IpV4Packet.class)) {
+                    src = ((IpV4Packet.IpV4Header) tmpPacket.getHeader()).getSrcAddr().toString();
+                    dest = ((IpV4Packet.IpV4Header) tmpPacket.getHeader()).getDstAddr().toString();
                 }
-                if(packet.getClass() != UnknownPacket.class) protocol = packet.getClass().getName().substring(18).replace("Packet", "");
+                if(tmpPacket.getClass() != UnknownPacket.class) protocol = tmpPacket.getClass().getName().substring(18).replace("Packet", "");
                 else {
-                    String tmp = packetInfoBuilder.resolveProtocol(packet);
+                    String tmp = packetInfoBuilder.resolveProtocol(tmpPacket);
                     if(!tmp.equals("Unknown")) protocol=tmp;
                     break;
                 }
-            }while(packet.getPayload()!=null);
+            }
 
             if(src.equals("")){
                 if(packet.get(ArpPacket.class)!=null) {
-                    src = ((ArpPacket.ArpHeader) packet.getHeader()).getSrcHardwareAddr().toString();
-                    dest = ((ArpPacket.ArpHeader) packet.getHeader()).getDstHardwareAddr().toString();
+                    src = packet.get(ArpPacket.class).getHeader().getSrcHardwareAddr().toString();
+                    dest = packet.get(ArpPacket.class).getHeader().getDstHardwareAddr().toString();
                     protocol = "ARP";
                 }
             }
@@ -78,7 +75,7 @@ public class PacketCellFactory {
                         dest.substring(1),
                         protocol,
                         packets.get(packets.size() - 1).getRawData().length,
-                        packetInfoBuilder.buildInfo(packet, protocol)
+                        packetInfoBuilder.buildInfo(packet.getPayload().getPayload(), protocol)
                 ));
             } catch (Exception e) {
                 packets.remove(packets.size() - 1);
@@ -87,12 +84,10 @@ public class PacketCellFactory {
         }
     }
 
-
     public void stop() {
         captureLoop.stop();
         sniffer.close();
     }
-
 
     @SuppressWarnings("unchecked")
     private void formatTable() {
@@ -113,8 +108,16 @@ public class PacketCellFactory {
                     ((TabPane) netApp.getCurrentScene().lookup("#tabs")).getSelectionModel().select(2);
                 }
             });
+            row.setMaxHeight(row.getHeight());
+
             return row;
         });
+        packetTable.getVisibleLeafColumn(4).setCellFactory(new Callback<TableColumn, TableCell>() {
+            @Override
+            public TableCell call(TableColumn param) {
+                return null;
+            }
+        }); //TODO finish the row colouring
     }
 
 

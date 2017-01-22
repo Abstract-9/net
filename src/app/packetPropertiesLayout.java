@@ -1,5 +1,6 @@
 package app;
 
+import dissector.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Label;
@@ -12,9 +13,9 @@ import org.pcap4j.util.ByteArrays;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-class packetPropertiesLayout {
+public class packetPropertiesLayout {
 
-    enum protocol{
+    public enum protocol{
         HTTP ("Hypertext Transfer Protocol"),
         SSDP ("Simple Service Discovery Protocol"),
         Tcp  ("Transmission Control Protocol"),
@@ -36,6 +37,7 @@ class packetPropertiesLayout {
 
     private ArrayList<ListView<String>> lists;
     private ArrayList<Label> labels;
+    private ArrayList<AbstractDissector> dissectors;
     private EthernetPacket currentPacket;
     private ArrayList<String> packetTopology = new ArrayList<>();
     private PacketCell cell;
@@ -91,68 +93,45 @@ class packetPropertiesLayout {
     }
 
     private void firstProtocolProperties(Packet packet){
+        AbstractDissector dissector = null;
         ObservableList<String> values = FXCollections.observableArrayList();
         switch(packetTopology.get(1)){
             case "IpV4":
                 labels.get(0).setText(protocol.valueOf("IpV4").getLongName());
-                IpV4Packet.IpV4Header ipV4Header = packet.get(IpV4Packet.class).getHeader();
-                values.add("Version: 0x0800");
-                values.add("Source Address:" + ipV4Header.getSrcAddr().toString().substring(1));
-                values.add("Destination Address: " + ipV4Header.getDstAddr().toString().substring(1));
-                values.add("Header Length: " + ipV4Header.getRawData().length);
-                values.add("Total Length: " + ipV4Header.getTotalLength());
-
-                if(ipV4Header.getDontFragmentFlag()) values.add("Dont Fragment Flag: true");
-                else{
-                    values.add("Dont Fragment Flag: false");
-                    values.add("More Fragments Flag: " + ipV4Header.getMoreFragmentFlag());
-                }
-
-                values.add("Fragment Offset: " + ipV4Header.getFragmentOffset());
-                values.add("Time To Live: " + ipV4Header.getTtl());
-                values.add("Payload: " + packetTopology.get(2));
-                values.add("Header Checksum: 0x" + ByteArrays.toHexString(ipV4Header.getHeaderChecksum(), ""));
+                dissector = new IpV4Dissector();
                 break;
             case "Arp":
                 labels.get(0).setText(protocol.valueOf("Arp").getLongName());
-                ArpPacket.ArpHeader arpHeader = packet.get(ArpPacket.class).getHeader();
-                values.add("Protocol: " + arpHeader.getProtocolType().valueAsString());
-                values.add("Hardware Size: " + arpHeader.getHardwareAddrLengthAsInt());
-                values.add("Protocol Size: " + arpHeader.getHardwareAddrLengthAsInt());
-                values.add("Sender Hardware Address: " + arpHeader.getSrcHardwareAddr());
-                values.add("Sender IP address: " + arpHeader.getSrcProtocolAddr().toString());
-                values.add("Target Hardware Address: " + arpHeader.getDstHardwareAddr());
-                values.add("Target IP address: " + arpHeader.getDstProtocolAddr().toString());
+                dissector = new ArpDissector();
+                break;
         }
+        if(dissector!=null){
+            for(ValuePair<String, String> v : dissector.dissect(packet)){
+                values.add(v.getKey() + ": " + v.getValue());
+            }
+        }
+
         lists.get(1).setItems(values);
     }
 
     private void secondProtocolProperties(Packet packet){
+        AbstractDissector dissector = null;
         ObservableList<String> values = FXCollections.observableArrayList();
-        switch(packetTopology.get(2)){
+        switch(packetTopology.get(2)) {
             case "Tcp":
-                TcpPacket.TcpHeader tcpHeader = packet.get(TcpPacket.class).getHeader();
                 labels.get(1).setText(protocol.valueOf("Tcp").getLongName());
-                values.add("Source Port: " + tcpHeader.getSrcPort());
-                values.add("Destination Port: " + tcpHeader.getDstPort());
-                values.add("Header Length: " + tcpHeader.getRawData().length);
-                values.add("Acknowledgement Number: " + tcpHeader.getAcknowledgmentNumber());
-                values.add("Urgent: " + tcpHeader.getUrg());
-                values.add("Acknowledgement: " + tcpHeader.getAck());
-                values.add("Push: " + tcpHeader.getPsh());
-                values.add("Reset: " + tcpHeader.getRst());
-                values.add("SYN: " + tcpHeader.getSyn());
-                values.add("FIN: " + tcpHeader.getFin());
-                values.add("Window Size: " + tcpHeader.getWindow());
-                values.add("Header CheckSum: 0x" + ByteArrays.toHexString(tcpHeader.getChecksum(), ""));
+                dissector = new TcpDissector();
                 break;
             case "Udp":
                 UdpPacket.UdpHeader udpHeader = packet.get(UdpPacket.class).getHeader();
                 labels.get(1).setText(protocol.valueOf("Udp").getLongName());
-                values.add("Source Port: " + udpHeader.getSrcPort());
-                values.add("Destination Port: " + udpHeader.getDstPort());
-                values.add("Header Length: " + udpHeader.getLength());
-                values.add("Header Checksum: 0x" + ByteArrays.toHexString(udpHeader.getChecksum(), ""));
+                dissector = new UdpDissector();
+                break;
+        }
+        if(dissector!=null) {
+            for (ValuePair<String, String> v : dissector.dissect(packet)) {
+                values.add(v.getKey() + ": " +  v.getValue());
+            }
         }
         lists.get(2).setItems(values);
 
@@ -192,7 +171,7 @@ class packetPropertiesLayout {
         }
 
         for(int i=1;i<hexArray.size()+1;i++){
-            if(i!=0 && i%16==0) fillText+=hexArray.get(i-1)+"        " + packetText.substring(i-16,i-8) + "    " + packetText.substring(i-8,i-1) + "\n";
+            if(i!=0 && i%16==0) fillText+=hexArray.get(i-1)+"        " + packetText.substring(i-16,i-8) + "    " + packetText.substring(i-8,i) + "\n";
             else if(i!=0 && i%8==0) fillText+=hexArray.get(i-1)+"    ";
             else fillText+=hexArray.get(i-1)+" ";
         }

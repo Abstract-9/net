@@ -15,58 +15,40 @@ public class packetInfoBuilder {
 
     static String buildInfo(Packet packet, String protocol){
         String buildinfo = "";
-        switch(packet.getClass().getName()){
-            case "org.pcap4j.packet.TcpPacket":
+        String tmp = "";
+        String version;
+
+        switch (protocol) {
+            case "HTTP":
+                for (byte b : packet.getPayload().getRawData()) tmp += (char) b;
+                version = tmp.substring(tmp.indexOf("HTTP/"), tmp.indexOf("HTTP/") + 9);
+                if (tmp.startsWith("GET")) return "GET * " + version;
+                else buildinfo = "NOTIFY * " + version;
+                break;
+            case "SSDP":
+                for (byte b : packet.getPayload().getRawData()) tmp += (char) b;
+                version = tmp.substring(tmp.indexOf("HTTP/"), tmp.indexOf("HTTP/") + 9);
+                if (tmp.startsWith("GET")) return "GET * " + version;
+                else buildinfo = "NOTIFY * " + version;
+                break;
+            case "Tcp":
                 TcpPacket tcpPacket = packet.get(TcpPacket.class);
-                if(protocol!=null) {
-                    switch (protocol) {
-                        case "HTTP":
-                            String tmp = "";
-                            for (byte b : packet.getPayload().getRawData()) tmp += (char) b;
-                            String version = tmp.substring(tmp.indexOf("HTTP/"), tmp.indexOf("HTTP/") + 9);
-                            if (tmp.startsWith("GET")) return "GET * " + version;
-                            else buildinfo = "NOTIFY * " + version;
-                            break;
-                        default:
-                            buildinfo = protocol;
-                            break;
-                    }
-                } else {
-                    buildinfo = tcpPacket.getHeader().getSrcPort() + "->" + tcpPacket.getHeader().getDstPort() + " " +
-                            getTcpFlags(tcpPacket);
-
-                }
+                buildinfo = tcpPacket.getHeader().getSrcPort() + "->" + tcpPacket.getHeader().getDstPort() + " " +
+                        getTcpFlags(tcpPacket);
                 break;
-            case "org.pcap4j.packet.UdpPacket":
+            case "Udp":
                 UdpPacket udpPacket = packet.get(UdpPacket.class);
-                if(protocol!=null){
-                    switch(protocol){
-                        case "SSDP":
-                            String tmp = "";
-                            for (byte b : packet.getPayload().getRawData()) tmp += (char) b;
-                            String version = tmp.substring(tmp.indexOf("HTTP/"), tmp.indexOf("HTTP/") + 9);
-                            if (tmp.startsWith("GET")) return "GET * " + version;
-                            else buildinfo = "NOTIFY * " + version;
-                            break;
-                        default:
-                            buildinfo = protocol;
-                    }
-
-                }else{
-                    buildinfo = "Source Port: " + udpPacket.getHeader().getSrcPort().valueAsString() +
-                            "Destination Port: " + udpPacket.getHeader().getDstPort().valueAsString();
-
-                }
+                buildinfo = "Source Port: " + udpPacket.getHeader().getSrcPort().valueAsString() +
+                        "Destination Port: " + udpPacket.getHeader().getDstPort().valueAsString();
                 break;
-            case "org.pcap4j.packet.ArpPacket":
+            case "Arp":
                 ArpPacket.ArpHeader arpHeader = packet.get(ArpPacket.class).getHeader();
-                if(arpHeader.getOperation().equals(ArpOperation.REQUEST))
+                if (arpHeader.getOperation().equals(ArpOperation.REQUEST))
                     buildinfo = "Who has " + arpHeader.getDstProtocolAddr() + "? Tell " + arpHeader.getSrcProtocolAddr();
-                else if(arpHeader.getOperation().equals(ArpOperation.REPLY)){
+                else if (arpHeader.getOperation().equals(ArpOperation.REPLY)) {
                     buildinfo = arpHeader.getSrcProtocolAddr() + " belongs to " + arpHeader.getSrcHardwareAddr();
                 }
                 break;
-
 
         }
 

@@ -1,5 +1,6 @@
 package dissector;
 
+import app.packetPropertiesLayout;
 import org.pcap4j.packet.Packet;
 
 import java.util.ArrayList;
@@ -9,7 +10,12 @@ import java.util.ArrayList;
  */
 public class IpV6Dissector extends AbstractDissector {
     @Override
-    ArrayList<ValuePair> dissect(Packet p) {
+    public ArrayList<ValuePair<String, String>> dissect(Packet packet) {
+        return null;
+    }
+
+    @Override
+    packetPropertiesLayout.protocol getProtocol() {
         return null;
     }
 }

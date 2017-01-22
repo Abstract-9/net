@@ -1,21 +1,21 @@
 package dissector;
 
 
-class ValuePair<L,R> {
+public class ValuePair<L,R> {
 
     private final L left;
     private final R right;
 
-    ValuePair(L left, R right){
-        this.left = left;
-        this.right = right;
+    ValuePair(L key, R value){
+        this.left = key;
+        this.right = value;
     }
 
-    L getKey(){
+    public L getKey(){
        return left;
     }
 
-    R getValue(){
+    public R getValue(){
         return right;
     }
 
