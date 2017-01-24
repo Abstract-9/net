@@ -4,11 +4,11 @@ package app;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
-import org.pcap4j.packet.Packet;
+import javafx.scene.control.TableCell;
 
 import java.util.Date;
 
-public class PacketCell{
+public class PacketCell extends TableCell {
 
     private final SimpleStringProperty proto, src, dest, info;
     private final SimpleIntegerProperty num, length;

@@ -28,3 +28,31 @@
 .properties{
     -fx-font-family: monospace;
 }
+
+.table-row{
+    -fx-border-color: white;
+    -fx-border-width: 0 0 1px 0;
+}
+
+.Udp, .SSDP{
+    -fx-background-color: #94FFC6;
+}
+
+.Udp:selected, .SSDP:selected{
+    -fx-background-color: #AFFFE1;
+}
+
+.Tcp, .HTTP{
+    -fx-background-color: #87CCE8;
+}
+
+.Tcp:selected, .HTTP:selected{
+    -fx-background-color: #39CCE8;
+}
+
+.ARP{
+    -fx-background-color: #E8D6C3;
+}
+.ARP:selected{
+    -fx-background-color: #9DD6C3;
+}

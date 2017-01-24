@@ -17,7 +17,7 @@ public class UdpDissector extends AbstractDissector {
         UdpPacket.UdpHeader udpHeader = packet.get(UdpPacket.class).getHeader();
 
         values.add(new ValuePair("Source Port", udpHeader.getSrcPort().valueAsString()));
-        values.add(new ValuePair("Destination Por", udpHeader.getDstPort().valueAsString()));
+        values.add(new ValuePair("Destination Port", udpHeader.getDstPort().valueAsString()));
         values.add(new ValuePair("Header Length", String.valueOf(udpHeader.getLength())));
         values.add(new ValuePair("Header Checksum", "0x" +  ByteArrays.toHexString(udpHeader.getChecksum(), "")));
         return values;
@@ -25,6 +25,6 @@ public class UdpDissector extends AbstractDissector {
 
     @Override
     packetPropertiesLayout.protocol getProtocol() {
-        return packetPropertiesLayout.protocol.Udp;
+        return packetPropertiesLayout.protocol.UDP;
     }
 }

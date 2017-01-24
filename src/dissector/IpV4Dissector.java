@@ -35,7 +35,7 @@ public class IpV4Dissector extends AbstractDissector {
 
     @Override
     packetPropertiesLayout.protocol getProtocol() {
-        return packetPropertiesLayout.protocol.IpV4;
+        return packetPropertiesLayout.protocol.IPV4;
     }
 
 

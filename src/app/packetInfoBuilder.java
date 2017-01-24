@@ -39,9 +39,9 @@ public class packetInfoBuilder {
             case "Udp":
                 UdpPacket udpPacket = packet.get(UdpPacket.class);
                 buildinfo = "Source Port: " + udpPacket.getHeader().getSrcPort().valueAsString() +
-                        "Destination Port: " + udpPacket.getHeader().getDstPort().valueAsString();
+                        " Destination Port: " + udpPacket.getHeader().getDstPort().valueAsString();
                 break;
-            case "Arp":
+            case "ARP":
                 ArpPacket.ArpHeader arpHeader = packet.get(ArpPacket.class).getHeader();
                 if (arpHeader.getOperation().equals(ArpOperation.REQUEST))
                     buildinfo = "Who has " + arpHeader.getDstProtocolAddr() + "? Tell " + arpHeader.getSrcProtocolAddr();
@@ -62,9 +62,11 @@ public class packetInfoBuilder {
         String raw = "";
         for(byte b : packet.getRawData()) raw+=(char) b;
 
-        if(raw.startsWith("NOTIFY") || raw.startsWith("GET")) {
-            if (packet.getClass().getName().equals("org.pcap4j.packet.TcpPacket")) return "HTTP";
-            else return "SSDP";
+        if(raw.startsWith("NOTIFY")) {
+            return "SSDP";
+        } else if(raw.startsWith("GET") || raw.startsWith("POST") || raw.startsWith("HEAD") ||raw.startsWith("DELETE") ||
+        raw.startsWith("TRACE") || raw.startsWith("CONNECT") || raw.startsWith("OPTIONS")){
+            return "HTTP";
         }
         return "Unknown";
     }

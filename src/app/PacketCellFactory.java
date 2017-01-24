@@ -6,7 +6,6 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.util.Callback;
 import org.pcap4j.packet.*;
 
 import sniffer.CaptureLoop;
@@ -80,7 +79,6 @@ public class PacketCellFactory {
             } catch (Exception e) {
                 packets.remove(packets.size() - 1);
             }
-
         }
     }
 
@@ -112,12 +110,21 @@ public class PacketCellFactory {
 
             return row;
         });
-        packetTable.getVisibleLeafColumn(4).setCellFactory(new Callback<TableColumn, TableCell>() {
-            @Override
-            public TableCell call(TableColumn param) {
-                return null;
-            }
-        }); //TODO finish the row colouring
+
+        packetTable.getVisibleLeafColumn(4).setCellFactory(column -> {
+            return new TableCell<PacketCell, String>() {
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+
+                    setText(empty ? "" : item);
+
+                    getTableRow().getStyleClass().setAll(item, "table-row");
+                }
+            };
+        });
+
+
     }
 
 
@@ -129,6 +136,8 @@ public class PacketCellFactory {
     static Sniffer getSniffer() {
         return sniffer;
     }
+
+
 }
 
 

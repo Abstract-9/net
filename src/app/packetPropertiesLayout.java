@@ -1,5 +1,6 @@
 package app;
 
+import com.sun.istack.internal.Nullable;
 import dissector.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -8,21 +9,29 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import org.pcap4j.packet.*;
 import org.pcap4j.util.ByteArrays;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class packetPropertiesLayout {
 
     public enum protocol{
         HTTP ("Hypertext Transfer Protocol"),
         SSDP ("Simple Service Discovery Protocol"),
-        Tcp  ("Transmission Control Protocol"),
-        Udp  ("User Datagram Protocol"),
-        Arp  ("Address Resolution Protocol"),
-        IpV4 ("Internet Protocol Version 4"),
-        IpV6 ("Internet Protocol Version 6");
+        TCP  ("Transmission Control Protocol"),
+        UDP  ("User Datagram Protocol"),
+        ARP  ("Address Resolution Protocol"),
+        IPV4 ("Internet Protocol Version 4"),
+        IPV6 ("Internet Protocol Version 6");
 
         private final String longName;
 
@@ -35,6 +44,8 @@ public class packetPropertiesLayout {
         }
     }
 
+    public Map<protocol, Class> dissectorMap = new HashMap<>();
+
     private ArrayList<ListView<String>> lists;
     private ArrayList<Label> labels;
     private ArrayList<AbstractDissector> dissectors;
@@ -42,11 +53,21 @@ public class packetPropertiesLayout {
     private ArrayList<String> packetTopology = new ArrayList<>();
     private PacketCell cell;
     private TextArea raw;
+    private Logger logger = LoggerFactory.getLogger(packetPropertiesLayout.class);
 
     packetPropertiesLayout(ArrayList<ListView<String>> lists, ArrayList<Label> labels, TextArea raw){
         this.lists=lists;
         this.labels=labels;
         this.raw=raw;
+        try {
+            Path path = Paths.get(getClass().getProtectionDomain().getCodeSource().getLocation().getPath()
+                    .substring(3)+"\\dissector");
+            //Loads all dissectors in the dissector package
+            Files.walkFileTree(path, visitor);
+        }catch (Exception e){
+            logger.error("ERROR LOADING DISSECTORS! DISSECTOR FUNCTIONALITY LOST!");
+            logger.debug(e.getMessage());
+        }
     }
 
     void generateLayout(Packet packet, PacketCell cell){
@@ -93,53 +114,43 @@ public class packetPropertiesLayout {
     }
 
     private void firstProtocolProperties(Packet packet){
-        AbstractDissector dissector = null;
+        AbstractDissector dissector = loadDissector(protocol.valueOf(packetTopology.get(1).toUpperCase()));
         ObservableList<String> values = FXCollections.observableArrayList();
-        switch(packetTopology.get(1)){
-            case "IpV4":
-                labels.get(0).setText(protocol.valueOf("IpV4").getLongName());
-                dissector = new IpV4Dissector();
-                break;
-            case "Arp":
-                labels.get(0).setText(protocol.valueOf("Arp").getLongName());
-                dissector = new ArpDissector();
-                break;
-        }
         if(dissector!=null){
             for(ValuePair<String, String> v : dissector.dissect(packet)){
                 values.add(v.getKey() + ": " + v.getValue());
             }
         }
-
+        labels.get(0).setText(protocol.valueOf(packetTopology.get(1).toUpperCase()).getLongName());
         lists.get(1).setItems(values);
     }
 
     private void secondProtocolProperties(Packet packet){
-        AbstractDissector dissector = null;
-        ObservableList<String> values = FXCollections.observableArrayList();
-        switch(packetTopology.get(2)) {
-            case "Tcp":
-                labels.get(1).setText(protocol.valueOf("Tcp").getLongName());
-                dissector = new TcpDissector();
-                break;
-            case "Udp":
-                UdpPacket.UdpHeader udpHeader = packet.get(UdpPacket.class).getHeader();
-                labels.get(1).setText(protocol.valueOf("Udp").getLongName());
-                dissector = new UdpDissector();
-                break;
-        }
-        if(dissector!=null) {
-            for (ValuePair<String, String> v : dissector.dissect(packet)) {
-                values.add(v.getKey() + ": " +  v.getValue());
+        if(!packetTopology.get(2).equals("Unknown")) {
+            AbstractDissector dissector = loadDissector(protocol.valueOf(packetTopology.get(2).toUpperCase()));
+            ObservableList<String> values = FXCollections.observableArrayList();
+            if (dissector != null) {
+                for (ValuePair<String, String> v : dissector.dissect(packet)) {
+                    values.add(v.getKey() + ": " + v.getValue());
+                }
             }
+            labels.get(1).setText(protocol.valueOf(packetTopology.get(2).toUpperCase()).getLongName());
+            lists.get(2).setItems(values);
         }
-        lists.get(2).setItems(values);
-
     }
 
     private void thirdProtocolProperties(Packet packet){
-        if(!packetTopology.get(3).equals("Unknown")){
-            labels.get(2).setText(protocol.valueOf(packetTopology.get(3)).getLongName());
+        if(!packetTopology.get(3).equals("Unknown")) {
+            AbstractDissector dissector = loadDissector(protocol.valueOf(packetTopology.get(3).toUpperCase()));
+            ObservableList<String> values = FXCollections.observableArrayList();
+            if (dissector != null) {
+                for (ValuePair<String, String> v : dissector.dissect(packet)) {
+                    if(v.getValue()!=null)values.add(v.getKey() + ": " + v.getValue());
+                    else values.add(v.getKey());
+                }
+            }
+            labels.get(2).setText(protocol.valueOf(packetTopology.get(3).toUpperCase()).getLongName());
+            lists.get(3).setItems(values);
         }
     }
 
@@ -177,5 +188,36 @@ public class packetPropertiesLayout {
         }
         raw.setText(fillText);
     }
+
+    @Nullable
+    private AbstractDissector loadDissector(protocol protocol){
+        AbstractDissector dissector;
+        try {
+            return ((AbstractDissector) dissectorMap.get(protocol).newInstance());
+        }catch(Exception e){
+            logger.error("DISSECTOR INSTANTIATION FAILED!");
+            logger.debug("ATTEMPTED TO INSTANTIATE: " + protocol.getLongName());
+            logger.debug("ERROR: " + e.getMessage());
+        }
+        return null;
+    }
+
+    private SimpleFileVisitor<Path> visitor = new SimpleFileVisitor<Path>(){
+        @Override
+        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+            if(!file.getFileName().toString().equals("AbstractDissector.class") && !file.getFileName().toString().equals("ValuePair.class")) {
+                try {
+                    dissectorMap.put(protocol.valueOf(file.getFileName().toString().replace("Dissector.class", "").toUpperCase()),
+                            Class.forName("dissector." + file.getFileName().toString().replace(".class", "")));
+                    logger.info("Loaded dissector: " + file.getFileName().toString());
+                }catch (ClassNotFoundException e){
+                    logger.error("UNABLE TO FIND CLASS " + file.getFileName().toString()
+                            + " LIMITED DISSECTOR FUNCTIONALITY!");
+                    logger.debug(e.getMessage());
+                }
+            }
+            return FileVisitResult.CONTINUE;
+        }
+    };
 
 }

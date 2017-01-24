@@ -33,6 +33,6 @@ public class TcpDissector extends AbstractDissector {
 
     @Override
     packetPropertiesLayout.protocol getProtocol() {
-        return packetPropertiesLayout.protocol.Tcp;
+        return packetPropertiesLayout.protocol.TCP;
     }
 }

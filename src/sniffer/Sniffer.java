@@ -73,6 +73,8 @@ public class Sniffer {
         }catch(NotOpenException e){
             logger.error("Sniffer must be initialized before capturing!");
             logger.error(e.getMessage());
+        }catch(IllegalArgumentException e){
+            currentPacket = nextPacket();
         }
         return currentPacket;
 

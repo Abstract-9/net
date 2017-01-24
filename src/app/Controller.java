@@ -56,6 +56,7 @@ public class Controller extends GridPane{
         packetTable.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
             layout.generateLayout(factory.getPacket(packetTable.getSelectionModel().getSelectedIndex()), newValue);
         }));
+        logger.info("Initialized");
     }
 
     @FXML
