@@ -11,6 +11,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 
+import javafx.stage.FileChooser;
 import org.pcap4j.core.PcapNativeException;
 import org.pcap4j.core.Pcaps;
 import org.slf4j.Logger;
@@ -20,6 +21,7 @@ import sniffer.Sniffer;
 import sniffer.netAdapter;
 import sniffer.netInterface;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -28,7 +30,7 @@ public class Controller extends GridPane{
 
     private Logger logger = LoggerFactory.getLogger(Controller.class);
 
-    @FXML private Button toolbarStart, startButton, toolbarStop;
+    @FXML private Button toolbarStart, startButton, toolbarStop, toolbarOpen;
     @FXML private ListView<String> intList;
     @FXML private TableView<PacketCell> packetTable;
     @FXML private TabPane tabs;
@@ -48,8 +50,13 @@ public class Controller extends GridPane{
         intList.setItems(nifs);
 
         startButton.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("resource/start_button_small.png"))));
+        startButton.setTooltip(new Tooltip("Start a new capture"));
         toolbarStart.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("resource/start_button_xs.png"))));
+        toolbarStart.setTooltip(new Tooltip("Start a new capture"));
         toolbarStop.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("resource/stop_button_xs.png"))));
+        toolbarStop.setTooltip(new Tooltip("Stop current capture"));
+        toolbarOpen.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("resource/folder_open_xs.png"))));
+        toolbarOpen.setTooltip(new Tooltip("Open a capture file"));
 
         initPropertiesLayout();
 
@@ -122,6 +129,15 @@ public class Controller extends GridPane{
                 Arrays.asList(propertiesTableGeneral, propertiesTable1, propertiesTable2, propertiesTable3));
         ArrayList<Label> labels = new ArrayList<>(Arrays.asList(propertiesLabel1, propertiesLabel2, propertiesLabel3));
         layout = new packetPropertiesLayout(lists, labels, raw);
+    }
+
+    @FXML
+    void openFile(){
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Net: Open Capture File");
+        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Net Pcap File", "*.pcap"));
+        File cap = fileChooser.showOpenDialog(netApp.getPrimaryStage());
+
     }
 
 }

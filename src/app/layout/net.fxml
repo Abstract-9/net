@@ -18,10 +18,11 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.shape.Line?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<GridPane hgap="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" stylesheets="@fxml.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.Controller">
+<GridPane hgap="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" stylesheets="@fxml.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.Controller">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="619.0" minWidth="10.0" percentWidth="33.0" prefWidth="360.0" />
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="723.0" minWidth="10.0" prefWidth="360.0" />
@@ -37,7 +38,7 @@
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-              <MenuItem mnemonicParsing="false" text="Close" />
+              <MenuItem mnemonicParsing="false" onAction="#openFile" text="Open..." />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">
@@ -56,6 +57,8 @@
         <items>
           <Button fx:id="toolbarStart" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#startSniffer" />
             <Button fx:id="toolbarStop" contentDisplay="GRAPHIC_ONLY" disable="true" mnemonicParsing="false" onAction="#stopSniffer" />
+            <Line endY="10.0" startY="-10.0" />
+            <Button fx:id="toolbarOpen" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#openFile" />
         </items>
          <GridPane.margin>
             <Insets top="25.0" />

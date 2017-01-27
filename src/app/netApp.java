@@ -15,14 +15,17 @@ import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.file.Path;
+
 
 public class netApp extends Application {
 
     private Parent root;
     private static Scene currentScene;
     private ObservableList<Node> nodes;
-    private Stage primaryStage;
-    private Logger logger = LoggerFactory.getLogger(netApp.class);
+    private static Stage primaryStage;
+    private static Logger logger = LoggerFactory.getLogger(netApp.class);
+    public static String directory = netApp.class.getProtectionDomain().getCodeSource().getLocation().getPath().substring(1);
 
     @Override
     public void init() throws Exception{
@@ -35,7 +38,7 @@ public class netApp extends Application {
     public void start(Stage primaryStage) throws Exception{
 
         currentScene = new Scene(root);
-        this.primaryStage = primaryStage;
+        netApp.primaryStage = primaryStage;
 
         primaryStage.setTitle("Net");
         primaryStage.setScene(currentScene);
@@ -43,14 +46,15 @@ public class netApp extends Application {
         primaryStage.show();
     }
 
-    public Stage getPrimaryStage(){
+    static Stage getPrimaryStage(){
         logger.debug("Primary Stage: " + primaryStage.getTitle());
         return primaryStage;
     }
 
-    public static Scene getCurrentScene(){
+    static Scene getCurrentScene(){
         return currentScene;
     }
+
 
     @Override
     public void stop() throws Exception {

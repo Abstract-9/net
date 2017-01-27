@@ -6,6 +6,8 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 
 import javafx.scene.control.cell.PropertyValueFactory;
+import org.pcap4j.core.NotOpenException;
+import org.pcap4j.core.PcapDumper;
 import org.pcap4j.packet.*;
 
 import sniffer.CaptureLoop;
@@ -76,7 +78,12 @@ public class PacketCellFactory {
                         packets.get(packets.size() - 1).getRawData().length,
                         packetInfoBuilder.buildInfo(packet.getPayload().getPayload(), protocol)
                 ));
-            } catch (Exception e) {
+
+                sniffer.getDumper().dump(packets.get(packets.size() - 1), sniffer.getHandle().getTimestamp());
+            } catch(NotOpenException e){
+                logger.warn("dumping to empty dumper!");
+                logger.debug(e.getMessage());
+            } catch(Exception e) {
                 packets.remove(packets.size() - 1);
             }
         }

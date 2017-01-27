@@ -1,5 +1,6 @@
 package sniffer;
 
+import app.netApp;
 import com.sun.istack.internal.Nullable;
 import org.pcap4j.core.*;
 import org.pcap4j.core.PcapNetworkInterface.PromiscuousMode;
@@ -9,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
+import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -20,6 +22,7 @@ public class Sniffer {
     private static Packet currentPacket;
     private static long startTime;
     private static boolean initialized = false;
+    private PcapDumper dumper;
 
 
     public Sniffer(PcapNetworkInterface pnif, boolean init){
@@ -43,27 +46,23 @@ public class Sniffer {
             e.printStackTrace();
         }
 
-        logger.info("Handler created");
+        if(handle!=null) logger.info("Handler created");
+
+        try {
+            File directory = new File(netApp.directory);
+            File file = File.createTempFile("dump", ".pcap", directory);
+
+            this.dumper = handle.dumpOpen(file.getAbsolutePath());
+
+            logger.info("Dumper Initialized to " + file.getAbsolutePath());
+        }catch (Exception e){
+            logger.error("unable to open pcapDump! Captured packets will be lost!");
+            logger.debug("handle " + handle);
+            logger.debug(e.getMessage());
+        }
+
         logger.info("Sniffer Initialized on " + pnif.getAddresses().get(1));
         initialized = true;
-    }
-
-    @Nullable
-    public Packet nextPacket(Class packetType){
-        try {
-            currentPacket = handle.getNextPacket();
-        }catch(NotOpenException e){
-            logger.error("Sniffer must be initialized before capturing!");
-            logger.error(e.getMessage());
-        }
-
-        if(currentPacket==null) return null;
-
-        if(currentPacket.get(packetType)!=null){
-            return currentPacket.get(packetType);
-        }else{
-            return nextPacket(packetType);
-        }
     }
 
     @Nullable
@@ -99,6 +98,10 @@ public class Sniffer {
 
     public PcapNetworkInterface getPnif(){
         return pnif;
+    }
+
+    public PcapDumper getDumper(){
+        return dumper;
     }
 
 }
