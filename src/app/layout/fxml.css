@@ -56,3 +56,6 @@
 .ARP:selected{
     -fx-background-color: #9DD6C3;
 }
+.menu-item{
+    -fx-pref-width: 200px;
+}

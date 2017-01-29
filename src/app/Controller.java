@@ -37,6 +37,7 @@ public class Controller extends GridPane{
     @FXML private ListView<String> propertiesTableGeneral, propertiesTable1, propertiesTable2, propertiesTable3;
     @FXML private TextArea raw;
     @FXML private Label propertiesLabel1, propertiesLabel2, propertiesLabel3;
+    @FXML private MenuItem menuOpen;
 
     private netAdapter adapter = new netAdapter();
     private static boolean sniffing = false;
@@ -49,16 +50,8 @@ public class Controller extends GridPane{
         nifs.addAll(adapter.getInterfaceDisplayNames());
         intList.setItems(nifs);
 
-        startButton.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("resource/start_button_small.png"))));
-        startButton.setTooltip(new Tooltip("Start a new capture"));
-        toolbarStart.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("resource/start_button_xs.png"))));
-        toolbarStart.setTooltip(new Tooltip("Start a new capture"));
-        toolbarStop.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("resource/stop_button_xs.png"))));
-        toolbarStop.setTooltip(new Tooltip("Stop current capture"));
-        toolbarOpen.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("resource/folder_open_xs.png"))));
-        toolbarOpen.setTooltip(new Tooltip("Open a capture file"));
-
         initPropertiesLayout();
+        setUpGraphics();
 
         packetTable.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
             layout.generateLayout(factory.getPacket(packetTable.getSelectionModel().getSelectedIndex()), newValue);
@@ -68,6 +61,12 @@ public class Controller extends GridPane{
 
     @FXML
     public void startSniffer(){
+
+        if(factory!=null){
+            if(factory.getSniffer().getDumper().isOpen()){
+                logger.info("true");
+            }
+        }
 
         ObservableList<String> selectedSniffers =
                 intList.getSelectionModel().getSelectedItems();
@@ -137,6 +136,21 @@ public class Controller extends GridPane{
         fileChooser.setTitle("Net: Open Capture File");
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Net Pcap File", "*.pcap"));
         File cap = fileChooser.showOpenDialog(netApp.getPrimaryStage());
+
+    }
+
+    void setUpGraphics(){
+
+        startButton.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("resource/start_button_small.png"))));
+        startButton.setTooltip(new Tooltip("Start a new capture"));
+        toolbarStart.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("resource/start_button_xs.png"))));
+        toolbarStart.setTooltip(new Tooltip("Start a new capture"));
+        toolbarStop.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("resource/stop_button_xs.png"))));
+        toolbarStop.setTooltip(new Tooltip("Stop current capture"));
+        toolbarOpen.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("resource/folder_open_xs.png"))));
+        toolbarOpen.setTooltip(new Tooltip("Open a capture file"));
+        menuOpen.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("resource/folder_open_xs.png"))));
+
 
     }
 
