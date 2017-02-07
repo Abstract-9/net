@@ -17,18 +17,21 @@ import org.pcap4j.core.Pcaps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sniffer.OfflineSniffer;
 import sniffer.Sniffer;
 import sniffer.netAdapter;
 import sniffer.netInterface;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Optional;
 
 
 public class Controller extends GridPane{
 
-    private Logger logger = LoggerFactory.getLogger(Controller.class);
+    private static Logger logger = LoggerFactory.getLogger(Controller.class);
 
     @FXML private Button toolbarStart, startButton, toolbarStop, toolbarOpen;
     @FXML private ListView<String> intList;
@@ -40,7 +43,7 @@ public class Controller extends GridPane{
     @FXML private MenuItem menuOpen;
 
     private netAdapter adapter = new netAdapter();
-    private static boolean sniffing = false;
+    private static boolean sniffing = false, canRun = true;
     private static PacketCellFactory factory;
     private packetPropertiesLayout layout;
 
@@ -61,49 +64,59 @@ public class Controller extends GridPane{
 
     @FXML
     public void startSniffer(){
+        canRun = true;
 
         if(factory!=null){
             if(factory.getSniffer().getDumper().isOpen()){
-                logger.info("true");
+                Optional<ButtonType> save = Dialogs.showUnsavedCloseFile();
+                if(save.isPresent()) {
+                    if (save.get().equals(Dialogs.button.Yes.getButtonType())) {
+                        saveFile();
+                    } else if (save.get().equals(Dialogs.button.Cancel.getButtonType())) {
+                        canRun = false;
+                    }
+                }
             }
         }
 
-        ObservableList<String> selectedSniffers =
-                intList.getSelectionModel().getSelectedItems();
+        if(canRun) {
+            ObservableList<String> selectedSniffers =
+                    intList.getSelectionModel().getSelectedItems();
 
-        if(selectedSniffers.size()!=1){
+            if (selectedSniffers.size() != 1) {
 
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Error");
-            alert.setHeaderText("Invalid Network Interface Configuration");
-            alert.setContentText("Please select one and only one Network Interface for capture");
-            alert.showAndWait();
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Error");
+                alert.setHeaderText("Invalid Network Interface Configuration");
+                alert.setContentText("Please select one and only one Network Interface for capture");
+                alert.showAndWait();
 
-        }else{
+            } else {
 
-            String interfaceName = selectedSniffers.get(0);
-            netInterface nif = adapter.getInterfaceByDisplayName(interfaceName);
-            Sniffer sniffer = null;
+                String interfaceName = selectedSniffers.get(0);
+                netInterface nif = adapter.getInterfaceByDisplayName(interfaceName);
+                Sniffer sniffer = null;
 
-            try {
-                sniffer = new Sniffer(Pcaps.getDevByAddress(nif.getAddresses().get(0)), false);
-            }catch (PcapNativeException e){
-                logger.error("Invalid interface used");
-                logger.debug(e.getMessage());
-                Dialog<Void> dialog = new Dialog<>();
-                dialog.setContentText("Unable to capture from this interface. Please select another.");
-                dialog.show();
+                try {
+                    sniffer = new Sniffer(Pcaps.getDevByAddress(nif.getAddresses().get(0)), false);
+                } catch (PcapNativeException e) {
+                    logger.error("Invalid interface used");
+                    logger.debug(e.getMessage());
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setContentText("Unable to capture from this interface. Please select another.");
+                    alert.show();
+                }
+
+                if (sniffer != null) {
+                    sniffing = true;
+                    tabs.getSelectionModel().select(1);
+                    factory = new PacketCellFactory(sniffer, packetTable);
+                    factory.start();
+                    toolbarStart.setDisable(true);
+                    toolbarStop.setDisable(false);
+                }
+
             }
-
-            if(sniffer!=null) {
-                sniffing = true;
-                tabs.getSelectionModel().select(1);
-                factory = new PacketCellFactory(sniffer, packetTable);
-                factory.start();
-                toolbarStart.setDisable(true);
-                toolbarStop.setDisable(false);
-            }
-
         }
 
 
@@ -136,6 +149,31 @@ public class Controller extends GridPane{
         fileChooser.setTitle("Net: Open Capture File");
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Net Pcap File", "*.pcap"));
         File cap = fileChooser.showOpenDialog(netApp.getPrimaryStage());
+        if(cap!=null) {
+            OfflineSniffer sniffer = new OfflineSniffer(cap, true);
+            tabs.getSelectionModel().select(1);
+            factory = new PacketCellFactory(sniffer, packetTable);
+            factory.start();
+            toolbarStart.setDisable(false);
+            toolbarStop.setDisable(true);
+        }
+    }
+
+    @FXML
+    static void saveFile(){
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Net: Save Capture File");
+        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Net Pcap File", "*.pcap"));
+        File file = fileChooser.showSaveDialog(netApp.getPrimaryStage());
+        if(file!=null){
+            try {
+                if (file.createNewFile()) ;
+            }catch (IOException e){
+                logger.error("Unable to save file!");
+                logger.debug(e.getMessage());
+                Dialogs.showUnableToSave(file);
+            }
+        }
 
     }
 

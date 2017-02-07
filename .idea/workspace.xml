@@ -2,12 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="57100f05-73ae-4b52-8b05-6771eeba92b4" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/sniffer/AbstractSniffer.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/sniffer/OfflineSniffer.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/app/Dialogs.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/app/Controller.java" afterPath="$PROJECT_DIR$/src/app/Controller.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/app/layout/fxml.css" afterPath="$PROJECT_DIR$/src/app/layout/fxml.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/app/layout/net.fxml" afterPath="$PROJECT_DIR$/src/app/layout/net.fxml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/app/PacketCellFactory.java" afterPath="$PROJECT_DIR$/src/app/PacketCellFactory.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sniffer/AbstractSniffer.java" afterPath="$PROJECT_DIR$/src/sniffer/AbstractSniffer.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sniffer/CaptureLoop.java" afterPath="$PROJECT_DIR$/src/sniffer/CaptureLoop.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sniffer/Sniffer.java" afterPath="$PROJECT_DIR$/src/sniffer/Sniffer.java" />
     </list>
     <ignored path="net.iws" />
@@ -33,37 +33,15 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="PacketCellFactory.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="PacketCellFactory.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/app/PacketCellFactory.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="322">
-              <caret line="45" column="35" lean-forward="true" selection-start-line="45" selection-start-column="35" selection-end-line="45" selection-end-column="35" />
+            <state relative-caret-position="408">
+              <caret line="24" column="32" lean-forward="false" selection-start-line="24" selection-start-column="32" selection-end-line="24" selection-end-column="32" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#5355#5356#0" expanded="true" />
-                <element signature="e#5385#5386#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="AbstractSniffer.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/sniffer/AbstractSniffer.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="251">
-              <caret line="28" column="24" lean-forward="true" selection-start-line="28" selection-start-column="24" selection-end-line="28" selection-end-column="24" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#1101#1102#0" expanded="true" />
-                <element signature="e#1130#1131#0" expanded="true" />
-                <element signature="e#1162#1163#0" expanded="true" />
-                <element signature="e#1194#1195#0" expanded="true" />
-                <element signature="e#1223#1224#0" expanded="true" />
-                <element signature="e#1257#1258#0" expanded="true" />
-                <element signature="e#1300#1301#0" expanded="true" />
-                <element signature="e#1327#1328#0" expanded="true" />
-                <element signature="e#1362#1363#0" expanded="true" />
-                <element signature="e#1391#1392#0" expanded="true" />
+                <element signature="e#5268#5269#0" expanded="true" />
+                <element signature="e#5309#5310#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -72,8 +50,8 @@
       <file leaf-file-name="Sniffer.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/sniffer/Sniffer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="221">
-              <caret line="13" column="24" lean-forward="false" selection-start-line="13" selection-start-column="24" selection-end-line="13" selection-end-column="24" />
+            <state relative-caret-position="747">
+              <caret line="55" column="0" lean-forward="false" selection-start-line="55" selection-start-column="0" selection-end-line="55" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -84,11 +62,9 @@
       <file leaf-file-name="OfflineSniffer.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/sniffer/OfflineSniffer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="591">
-              <caret line="35" column="0" lean-forward="false" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+            <state relative-caret-position="306">
+              <caret line="21" column="0" lean-forward="false" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -96,13 +72,9 @@
       <file leaf-file-name="CaptureLoop.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/sniffer/CaptureLoop.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="493">
-              <caret line="30" column="0" lean-forward="false" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
-              <folding>
-                <element signature="imports" expanded="false" />
-                <element signature="e#756#757#0" expanded="false" />
-                <element signature="e#787#788#0" expanded="false" />
-              </folding>
+            <state relative-caret-position="357">
+              <caret line="22" column="34" lean-forward="false" selection-start-line="22" selection-start-column="34" selection-end-line="22" selection-end-column="34" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -112,13 +84,7 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="1275">
               <caret line="99" column="28" lean-forward="false" selection-start-line="99" selection-start-column="28" selection-end-line="99" selection-end-column="28" />
-              <folding>
-                <element signature="imports" expanded="false" />
-                <element signature="e#1097#1098#0" expanded="false" />
-                <element signature="e#1145#1146#0" expanded="false" />
-                <element signature="e#1176#1177#0" expanded="false" />
-                <element signature="e#1220#1221#0" expanded="false" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -126,10 +92,23 @@
       <file leaf-file-name="Controller.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/app/Controller.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2053">
-              <caret line="147" column="120" lean-forward="true" selection-start-line="147" selection-start-column="120" selection-end-line="147" selection-end-column="120" />
+            <state relative-caret-position="561">
+              <caret line="59" column="0" lean-forward="false" selection-start-line="59" selection-start-column="0" selection-end-line="59" selection-end-column="0" />
               <folding>
-                <marker date="1485632962884" expanded="true" signature="21:619" ph="..." />
+                <element signature="imports" expanded="true" />
+                <marker date="1485991190058" expanded="true" signature="21:705" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Dialogs.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/app/Dialogs.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="251">
+              <caret line="37" column="34" lean-forward="false" selection-start-line="37" selection-start-column="34" selection-end-line="37" selection-end-column="34" />
+              <folding>
+                <element signature="imports" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -138,7 +117,7 @@
       <file leaf-file-name="fxml.css" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/app/layout/fxml.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="455">
+            <state relative-caret-position="1003">
               <caret line="59" column="23" lean-forward="false" selection-start-line="59" selection-start-column="23" selection-end-line="59" selection-end-column="23" />
               <folding />
             </state>
@@ -148,21 +127,11 @@
       <file leaf-file-name="netApp.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/app/netApp.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="679">
-              <caret line="60" column="89" lean-forward="true" selection-start-line="60" selection-start-column="89" selection-end-line="60" selection-end-column="89" />
+            <state relative-caret-position="731">
+              <caret line="60" column="89" lean-forward="false" selection-start-line="60" selection-start-column="89" selection-end-line="60" selection-end-column="89" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="packetInfoBuilder.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/app/packetInfoBuilder.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="578">
-              <caret line="42" column="22" lean-forward="false" selection-start-line="42" selection-start-column="22" selection-end-line="42" selection-end-column="22" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -219,7 +188,6 @@
         <option value="$PROJECT_DIR$/src/net/layout/net.fxml" />
         <option value="$PROJECT_DIR$/src/net/netApp.java" />
         <option value="$PROJECT_DIR$/src/net/Controller.java" />
-        <option value="$PROJECT_DIR$/src/sniffer/CaptureLoop.java" />
         <option value="$PROJECT_DIR$/src/sniffer/packetIdentifier.java" />
         <option value="$PROJECT_DIR$/src/app/layout/net.fxml" />
         <option value="$PROJECT_DIR$/src/dissector/valuePair.java" />
@@ -237,14 +205,16 @@
         <option value="$PROJECT_DIR$/src/dissector/HttpDissector.java" />
         <option value="$PROJECT_DIR$/src/app/packetPropertiesLayout.java" />
         <option value="$PROJECT_DIR$/src/app/netApp.java" />
-        <option value="$PROJECT_DIR$/src/app/PacketCellFactory.java" />
-        <option value="$PROJECT_DIR$/src/app/Controller.java" />
         <option value="$PROJECT_DIR$/src/app/layout/fxml.css" />
         <option value="$PROJECT_DIR$/src/sniffer/abstractSniffer.java" />
         <option value="$PROJECT_DIR$/src/sniffer/offlineSniffer.java" />
-        <option value="$PROJECT_DIR$/src/sniffer/AbstractSniffer.java" />
-        <option value="$PROJECT_DIR$/src/sniffer/Sniffer.java" />
         <option value="$PROJECT_DIR$/src/sniffer/OfflineSniffer.java" />
+        <option value="$PROJECT_DIR$/src/sniffer/Sniffer.java" />
+        <option value="$PROJECT_DIR$/src/sniffer/AbstractSniffer.java" />
+        <option value="$PROJECT_DIR$/src/app/Dialogs.java" />
+        <option value="$PROJECT_DIR$/src/sniffer/CaptureLoop.java" />
+        <option value="$PROJECT_DIR$/src/app/PacketCellFactory.java" />
+        <option value="$PROJECT_DIR$/src/app/Controller.java" />
       </list>
     </option>
   </component>
@@ -279,6 +249,9 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
+      <pane id="Scratches" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -407,9 +380,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="Scratches" />
-      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -884,7 +854,14 @@
       <workItem from="1485475706859" duration="7136000" />
       <workItem from="1485574186710" duration="87000" />
       <workItem from="1485574356170" duration="1017000" />
-      <workItem from="1485631425707" duration="5776000" />
+      <workItem from="1485631425707" duration="6378000" />
+      <workItem from="1485727441634" duration="1280000" />
+      <workItem from="1485752617375" duration="1211000" />
+      <workItem from="1485812556193" duration="3296000" />
+      <workItem from="1485916989542" duration="3383000" />
+      <workItem from="1485989923468" duration="160000" />
+      <workItem from="1485990166756" duration="1818000" />
+      <workItem from="1486494835569" duration="346000" />
     </task>
     <task id="LOCAL-00001" summary="Added netAdapter and rawSniffer Classes">
       <created>1484018909913</created>
@@ -970,15 +947,22 @@
       <option name="project" value="LOCAL" />
       <updated>1485486354976</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="Added OfflineSniffer and AbstractSniffer classes">
+      <created>1485655453250</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1485655453250</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="156205000" />
+    <option name="totallyTimeSpent" value="168301000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="0" width="1932" height="1047" extended-state="0" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -1052,8 +1036,14 @@
           <properties />
           <option name="timeStamp" value="76" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/sniffer/OfflineSniffer.java</url>
+          <line>21</line>
+          <properties />
+          <option name="timeStamp" value="84" />
+        </line-breakpoint>
       </breakpoints>
-      <option name="time" value="82" />
+      <option name="time" value="85" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -1062,13 +1052,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_31/javafx-src.zip!/javafx/beans/property/ObjectPropertyBase.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="131" column="0" lean-forward="false" selection-start-line="131" selection-start-column="0" selection-end-line="131" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_31/javafx-src.zip!/javafx/scene/Node.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="169">
@@ -1148,14 +1131,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/sniffer/packetIdentifier.java" />
     <entry file="file://$PROJECT_DIR$/src/app/layout/net.fxml">
-      <provider editor-type-id="JavaFX-Scene-Builder">
-        <state />
-      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="391">
           <caret line="23" column="117" lean-forward="false" selection-start-line="23" selection-start-column="117" selection-end-line="23" selection-end-column="117" />
           <folding />
         </state>
+      </provider>
+      <provider editor-type-id="JavaFX-Scene-Builder">
+        <state />
       </provider>
     </entry>
     <entry file="jar://$PROJECT_DIR$/lib/pcap4j-core-1.7.0.jar!/org/pcap4j/packet/ArpPacket.class">
@@ -1212,7 +1195,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="47">
           <caret line="6" column="38" lean-forward="false" selection-start-line="6" selection-start-column="38" selection-end-line="6" selection-end-column="38" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1331,19 +1313,24 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="578">
           <caret line="42" column="22" lean-forward="false" selection-start-line="42" selection-start-column="22" selection-end-line="42" selection-end-column="22" />
-          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/sniffer/CaptureLoop.java">
+    <entry file="file://$PROJECT_DIR$/src/app/netApp.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="493">
-          <caret line="30" column="0" lean-forward="false" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
+        <state relative-caret-position="731">
+          <caret line="60" column="89" lean-forward="false" selection-start-line="60" selection-start-column="89" selection-end-line="60" selection-end-column="89" />
           <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#756#757#0" expanded="false" />
-            <element signature="e#787#788#0" expanded="false" />
+            <element signature="imports" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/layout/fxml.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1003">
+          <caret line="59" column="23" lean-forward="false" selection-start-line="59" selection-start-column="23" selection-end-line="59" selection-end-column="23" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1351,92 +1338,75 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1275">
           <caret line="99" column="28" lean-forward="false" selection-start-line="99" selection-start-column="28" selection-end-line="99" selection-end-column="28" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#1097#1098#0" expanded="false" />
-            <element signature="e#1145#1146#0" expanded="false" />
-            <element signature="e#1176#1177#0" expanded="false" />
-            <element signature="e#1220#1221#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/netApp.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="679">
-          <caret line="60" column="89" lean-forward="true" selection-start-line="60" selection-start-column="89" selection-end-line="60" selection-end-column="89" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/Controller.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2053">
-          <caret line="147" column="120" lean-forward="true" selection-start-line="147" selection-start-column="120" selection-end-line="147" selection-end-column="120" />
-          <folding>
-            <marker date="1485632962884" expanded="true" signature="21:619" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/layout/fxml.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="455">
-          <caret line="59" column="23" lean-forward="false" selection-start-line="59" selection-start-column="23" selection-end-line="59" selection-end-column="23" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/sniffer/AbstractSniffer.java">
+    <entry file="file://$PROJECT_DIR$/src/sniffer/CaptureLoop.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="251">
-          <caret line="28" column="24" lean-forward="true" selection-start-line="28" selection-start-column="24" selection-end-line="28" selection-end-column="24" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1101#1102#0" expanded="true" />
-            <element signature="e#1130#1131#0" expanded="true" />
-            <element signature="e#1162#1163#0" expanded="true" />
-            <element signature="e#1194#1195#0" expanded="true" />
-            <element signature="e#1223#1224#0" expanded="true" />
-            <element signature="e#1257#1258#0" expanded="true" />
-            <element signature="e#1300#1301#0" expanded="true" />
-            <element signature="e#1327#1328#0" expanded="true" />
-            <element signature="e#1362#1363#0" expanded="true" />
-            <element signature="e#1391#1392#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sniffer/Sniffer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="13" column="24" lean-forward="false" selection-start-line="13" selection-start-column="24" selection-end-line="13" selection-end-column="24" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state relative-caret-position="357">
+          <caret line="22" column="34" lean-forward="false" selection-start-line="22" selection-start-column="34" selection-end-line="22" selection-end-column="34" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/sniffer/OfflineSniffer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="591">
-          <caret line="35" column="0" lean-forward="false" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
+        <state relative-caret-position="306">
+          <caret line="21" column="0" lean-forward="false" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/Controller.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="561">
+          <caret line="59" column="0" lean-forward="false" selection-start-line="59" selection-start-column="0" selection-end-line="59" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
+            <marker date="1485991190058" expanded="true" signature="21:705" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/app/PacketCellFactory.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="322">
-          <caret line="45" column="35" lean-forward="true" selection-start-line="45" selection-start-column="35" selection-end-line="45" selection-end-column="35" />
+        <state relative-caret-position="408">
+          <caret line="24" column="32" lean-forward="false" selection-start-line="24" selection-start-column="32" selection-end-line="24" selection-end-column="32" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#5355#5356#0" expanded="true" />
-            <element signature="e#5385#5386#0" expanded="true" />
+            <element signature="e#5268#5269#0" expanded="true" />
+            <element signature="e#5309#5310#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sniffer/AbstractSniffer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="540">
+          <caret line="34" column="43" lean-forward="false" selection-start-line="34" selection-start-column="43" selection-end-line="34" selection-end-column="43" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sniffer/Sniffer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="747">
+          <caret line="55" column="0" lean-forward="false" selection-start-line="55" selection-start-column="0" selection-end-line="55" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/Dialogs.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="251">
+          <caret line="37" column="34" lean-forward="false" selection-start-line="37" selection-start-column="34" selection-end-line="37" selection-end-column="34" />
+          <folding>
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>

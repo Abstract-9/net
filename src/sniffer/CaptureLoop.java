@@ -7,10 +7,10 @@ import org.pcap4j.packet.Packet;
 public class CaptureLoop implements Runnable {
 
     private boolean running = true;
-    private Sniffer sniffer;
+    private AbstractSniffer sniffer;
     private PacketCellFactory factory;
 
-    public CaptureLoop(Sniffer sniffer, PacketCellFactory factory){
+    public CaptureLoop(AbstractSniffer sniffer, PacketCellFactory factory){
         this.sniffer = sniffer;
         this.factory = factory;
     }

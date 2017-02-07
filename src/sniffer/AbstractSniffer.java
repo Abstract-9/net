@@ -53,4 +53,5 @@ public abstract class AbstractSniffer {
     public PcapDumper getDumper(){
         return dumper;
     }
+    public File getPcapFile() { return pcapFile; }
 }

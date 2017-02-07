@@ -7,11 +7,10 @@ import javafx.scene.control.*;
 
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.pcap4j.core.NotOpenException;
-import org.pcap4j.core.PcapDumper;
 import org.pcap4j.packet.*;
 
+import sniffer.AbstractSniffer;
 import sniffer.CaptureLoop;
-import sniffer.Sniffer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +19,7 @@ import java.util.ArrayList;
 
 public class PacketCellFactory {
 
-    private static Sniffer sniffer;
+    private static AbstractSniffer sniffer;
     private static TableView packetTable;
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private ObservableList<PacketCell> packetCells = FXCollections.observableArrayList();
@@ -28,7 +27,7 @@ public class PacketCellFactory {
     private CaptureLoop captureLoop;
     private ArrayList<Packet> packets = new ArrayList<>();
 
-    PacketCellFactory(Sniffer sniffer, TableView packetTable) {
+    PacketCellFactory(AbstractSniffer sniffer, TableView packetTable) {
         PacketCellFactory.sniffer = sniffer;
         PacketCellFactory.packetTable = packetTable;
     }
@@ -140,7 +139,7 @@ public class PacketCellFactory {
         return packets.get(index);
     }
 
-    static Sniffer getSniffer() {
+    static AbstractSniffer getSniffer() {
         return sniffer;
     }
 

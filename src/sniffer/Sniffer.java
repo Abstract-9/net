@@ -9,6 +9,8 @@ import java.io.File;
 
 public class Sniffer extends AbstractSniffer {
 
+
+
     public Sniffer(PcapNetworkInterface pnif, boolean init){
         this.pnif = pnif;
         if(init) init();
@@ -32,11 +34,11 @@ public class Sniffer extends AbstractSniffer {
 
         try {
             File directory = new File(netApp.directory);
-            File file = File.createTempFile("dump", ".pcap", directory);
+            pcapFile = File.createTempFile("dump", ".pcap", directory);
 
-            this.dumper = handle.dumpOpen(file.getAbsolutePath());
+            this.dumper = handle.dumpOpen(pcapFile.getAbsolutePath());
 
-            logger.info("Dumper Initialized to " + file.getAbsolutePath());
+            logger.info("Dumper Initialized to " + pcapFile.getAbsolutePath());
         }catch (Exception e){
             logger.error("unable to open pcapDump! Captured packets will be lost!");
             logger.debug("handle " + handle);
