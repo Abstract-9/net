@@ -46,7 +46,7 @@ public class Dialogs {
         error.setContentText("Unable to save captured data to " + file.getAbsolutePath());
         error.getButtonTypes().setAll(Ok.getButtonType(), Retry.getButtonType());
         while(error.showAndWait().isPresent() && error.showAndWait().get().equals(Retry.getButtonType())){
-            Controller.saveFile();
+            ((Controller)netApp.getLoader().getController()).saveFile();
         }
 
     }

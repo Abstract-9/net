@@ -14,6 +14,7 @@ import sniffer.CaptureLoop;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sniffer.Sniffer;
 
 import java.util.ArrayList;
 
@@ -78,7 +79,10 @@ public class PacketCellFactory {
                         packetInfoBuilder.buildInfo(packet.getPayload().getPayload(), protocol)
                 ));
 
-                sniffer.getDumper().dump(packets.get(packets.size() - 1), sniffer.getHandle().getTimestamp());
+                if(sniffer.getClass().equals(Sniffer.class)) {
+                    sniffer.getDumper().dump(packets.get(packets.size() - 1), sniffer.getHandle().getTimestamp());
+                }
+
             } catch(NotOpenException e){
                 logger.warn("dumping to empty dumper!");
                 logger.debug(e.getMessage());
@@ -117,19 +121,16 @@ public class PacketCellFactory {
             return row;
         });
 
-        packetTable.getVisibleLeafColumn(4).setCellFactory(column -> {
-            return new TableCell<PacketCell, String>() {
-                @Override
-                protected void updateItem(String item, boolean empty) {
-                    super.updateItem(item, empty);
+        packetTable.getVisibleLeafColumn(4).setCellFactory(column -> new TableCell<PacketCell, String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
 
-                    setText(empty ? "" : item);
+                setText(empty ? "" : item);
 
-                    getTableRow().getStyleClass().setAll(item, "table-row");
-                }
-            };
+                getTableRow().getStyleClass().setAll(item, "table-row");
+            }
         });
-
 
     }
 
@@ -139,7 +140,7 @@ public class PacketCellFactory {
         return packets.get(index);
     }
 
-    static AbstractSniffer getSniffer() {
+    AbstractSniffer getSniffer() {
         return sniffer;
     }
 

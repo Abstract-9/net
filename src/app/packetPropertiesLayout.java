@@ -48,11 +48,11 @@ public class packetPropertiesLayout {
 
     private ArrayList<ListView<String>> lists;
     private ArrayList<Label> labels;
-    private ArrayList<AbstractDissector> dissectors;
     private EthernetPacket currentPacket;
     private ArrayList<String> packetTopology = new ArrayList<>();
     private PacketCell cell;
     private TextArea raw;
+    private PacketCellFactory factory;
     private Logger logger = LoggerFactory.getLogger(packetPropertiesLayout.class);
 
     packetPropertiesLayout(ArrayList<ListView<String>> lists, ArrayList<Label> labels, TextArea raw){
@@ -70,7 +70,7 @@ public class packetPropertiesLayout {
         }
     }
 
-    void generateLayout(Packet packet, PacketCell cell){
+    void generateLayout(Packet packet, PacketCell cell, PacketCellFactory factory){
         for(ListView<String> l : lists) l.setItems(FXCollections.emptyObservableList());
         for (Label l : labels) l.setText("");
 
@@ -78,6 +78,7 @@ public class packetPropertiesLayout {
 
         currentPacket = packet.get(EthernetPacket.class);
         this.cell = cell;
+        this.factory = factory;
 
         generalProperties();
         firstProtocolProperties(currentPacket.getPayload());
@@ -95,7 +96,7 @@ public class packetPropertiesLayout {
         //add various general information values to the list
         values.add("Frame Number: " + cell.getNum());
         values.add("Capture Time: " + cell.getCapTime().toString());
-        values.add("Capture Interface: " + PacketCellFactory.getSniffer().getPnif().getName());
+        values.add("Capture Interface: " + factory.getSniffer().getPnif().getName());
         values.add("Epoch Time: " + cell.getCapTime().getTime() + "ms");
         values.add("Frame Length: " + currentPacket.getRawData().length + " bytes");
 

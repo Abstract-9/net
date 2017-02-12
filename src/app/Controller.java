@@ -24,6 +24,7 @@ import sniffer.netInterface;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
@@ -33,7 +34,7 @@ public class Controller extends GridPane{
 
     private static Logger logger = LoggerFactory.getLogger(Controller.class);
 
-    @FXML private Button toolbarStart, startButton, toolbarStop, toolbarOpen;
+    @FXML private Button toolbarStart, startButton, toolbarStop, toolbarOpen, toolbarSave;
     @FXML private ListView<String> intList;
     @FXML private TableView<PacketCell> packetTable;
     @FXML private TabPane tabs;
@@ -57,7 +58,9 @@ public class Controller extends GridPane{
         setUpGraphics();
 
         packetTable.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
-            layout.generateLayout(factory.getPacket(packetTable.getSelectionModel().getSelectedIndex()), newValue);
+            if(packetTable.getSelectionModel().getSelectedIndex()>0) {
+                layout.generateLayout(factory.getPacket(packetTable.getSelectionModel().getSelectedIndex()), newValue, factory);
+            }
         }));
         logger.info("Initialized");
     }
@@ -66,7 +69,7 @@ public class Controller extends GridPane{
     public void startSniffer(){
         canRun = true;
 
-        if(factory!=null){
+        if(factory!=null && factory.getSniffer()!=null){
             if(factory.getSniffer().getDumper().isOpen()){
                 Optional<ButtonType> save = Dialogs.showUnsavedCloseFile();
                 if(save.isPresent()) {
@@ -114,6 +117,7 @@ public class Controller extends GridPane{
                     factory.start();
                     toolbarStart.setDisable(true);
                     toolbarStop.setDisable(false);
+                    toolbarSave.setDisable(false);
                 }
 
             }
@@ -160,24 +164,24 @@ public class Controller extends GridPane{
     }
 
     @FXML
-    static void saveFile(){
+    void saveFile(){
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Net: Save Capture File");
-        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Net Pcap File", "*.pcap"));
+        fileChooser.getExtensionFilters().setAll(new FileChooser.ExtensionFilter("Net Pcap File (*.pcap)", "*.pcap"));
         File file = fileChooser.showSaveDialog(netApp.getPrimaryStage());
         if(file!=null){
             try {
-                if (file.createNewFile()) ;
+                Files.move(factory.getSniffer().getPcapFile().toPath(), file.toPath());
+                logger.info("Pcap file saved to " + file.getAbsolutePath());
             }catch (IOException e){
-                logger.error("Unable to save file!");
-                logger.debug(e.getMessage());
-                Dialogs.showUnableToSave(file);
+                logger.error("UNABLE TO SAVE PCAP FILE! DATA WILL BE LOST!");
+                logger.debug(file.getAbsolutePath());
             }
         }
 
     }
 
-    void setUpGraphics(){
+    private void setUpGraphics(){
 
         startButton.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("resource/start_button_small.png"))));
         startButton.setTooltip(new Tooltip("Start a new capture"));
@@ -187,6 +191,8 @@ public class Controller extends GridPane{
         toolbarStop.setTooltip(new Tooltip("Stop current capture"));
         toolbarOpen.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("resource/folder_open_xs.png"))));
         toolbarOpen.setTooltip(new Tooltip("Open a capture file"));
+        toolbarSave.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("resource/save_xs.png"))));
+        toolbarSave.setTooltip(new Tooltip("Save current capture"));
         menuOpen.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("resource/folder_open_xs.png"))));
 
 

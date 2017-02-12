@@ -51,6 +51,7 @@ public class Sniffer extends AbstractSniffer {
 
     public void close(){
         handle.close();
+        dumper.close();
         logger.info("Sniffer Closed");
     }
 

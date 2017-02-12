@@ -40,6 +40,7 @@
           <Menu mnemonicParsing="false" text="File">
             <items>
               <MenuItem fx:id="menuOpen" mnemonicParsing="false" onAction="#openFile" text="Open..." />
+                  <MenuItem mnemonicParsing="false" text="Save" />
                   <MenuItem mnemonicParsing="false" text="Close" />
                   <SeparatorMenuItem mnemonicParsing="false" />
             </items>
@@ -62,6 +63,7 @@
             <Button fx:id="toolbarStop" contentDisplay="GRAPHIC_ONLY" disable="true" mnemonicParsing="false" onAction="#stopSniffer" />
             <Line endY="10.0" startY="-10.0" />
             <Button fx:id="toolbarOpen" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#openFile" />
+            <Button fx:id="toolbarSave" contentDisplay="GRAPHIC_ONLY" disable="true" mnemonicParsing="false" onAction="#saveFile" />
         </items>
          <GridPane.margin>
             <Insets top="25.0" />
