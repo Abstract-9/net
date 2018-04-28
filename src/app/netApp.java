@@ -20,7 +20,7 @@ public class netApp extends Application {
     private static Scene currentScene;
     private static Stage primaryStage;
     private static Logger logger = LoggerFactory.getLogger(netApp.class);
-    public static String directory = netApp.class.getProtectionDomain().getCodeSource().getLocation().getPath().substring(1);
+    public static String directory = System.getProperty("user.dir");
 
     @Override
     public void init() throws Exception{
@@ -39,6 +39,7 @@ public class netApp extends Application {
         primaryStage.setScene(currentScene);
 
         primaryStage.show();
+        
     }
 
     static Stage getPrimaryStage(){

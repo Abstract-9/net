@@ -60,8 +60,7 @@ public class packetPropertiesLayout {
         this.labels=labels;
         this.raw=raw;
         try {
-            Path path = Paths.get(getClass().getProtectionDomain().getCodeSource().getLocation().getPath()
-                    .substring(3)+"\\dissector");
+            Path path = Paths.get(System.getProperty("user.dir")+"/out/production/net/dissector/");
             //Loads all dissectors in the dissector package
             Files.walkFileTree(path, visitor);
         }catch (Exception e){
